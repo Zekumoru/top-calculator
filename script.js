@@ -24,9 +24,7 @@ document.querySelector('.dot').addEventListener('click', (e) => {
   enteredDot = true;
 });
 
-document.querySelectorAll('.numbers button').forEach((button) => {
-  if (Number.isNaN(+button.textContent)) return;
-  
+document.querySelectorAll('.numbers button.digit').forEach((button) => {
   button.addEventListener('click', (e) => {
     if (error) return;
 
@@ -43,7 +41,7 @@ document.querySelectorAll('.numbers button').forEach((button) => {
   });
 });
 
-document.querySelectorAll('.operators button').forEach((button) => {
+document.querySelectorAll('.operators button.operator').forEach((button) => {
   button.addEventListener('click', (e) => {
     if (error) return;
 
