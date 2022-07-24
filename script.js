@@ -1,5 +1,5 @@
 
-const output = document.querySelector('.output');
+const display = document.querySelector('.display');
 
 let firstInput;
 let secondInput;
@@ -7,7 +7,7 @@ let enteredSecondInput = false;
 let operator = null;
 
 document.querySelector('.clear').addEventListener('click', (e) => {
-  output.textContent = '0';
+  display.textContent = '0';
   firstInput = 0;
   operator = null;
 });
@@ -17,14 +17,14 @@ document.querySelectorAll('.numbers button').forEach((button) => {
   
   button.addEventListener('click', (e) => {
     if (!enteredSecondInput && operator !== null) {
-      output.textContent = button.textContent;
-      secondInput = +output.textContent;
+      display.textContent = button.textContent;
+      secondInput = +display.textContent;
       enteredSecondInput = true;
       return;
     }
 
-    (output.textContent === '0')? output.textContent = button.textContent : output.textContent += button.textContent;
-    (enteredSecondInput)? secondInput = +output.textContent : firstInput = +output.textContent;
+    (display.textContent === '0')? display.textContent = button.textContent : display.textContent += button.textContent;
+    (enteredSecondInput)? secondInput = +display.textContent : firstInput = +display.textContent;
   });
 });
 
@@ -32,10 +32,10 @@ document.querySelectorAll('.operators button').forEach((button) => {
   button.addEventListener('click', (e) => {
     if (operator !== null && (enteredSecondInput || button.textContent === '=')) {
       firstInput = operate(operator, firstInput, secondInput);
-      output.textContent = firstInput;
+      display.textContent = firstInput;
       enteredSecondInput = false;
     }
-    
+
     if (button.textContent === '=') return;
 
     operator = button.textContent;
