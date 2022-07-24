@@ -9,6 +9,8 @@ let operator = null;
 document.querySelector('.clear').addEventListener('click', (e) => {
   updateDisplay(0);
   firstInput = 0;
+  secondInput = 0;
+  enteredSecondInput = false;
   operator = null;
 });
 
