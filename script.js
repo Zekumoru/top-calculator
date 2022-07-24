@@ -5,6 +5,7 @@ let firstInput;
 let secondInput;
 let enteredSecondInput = false;
 let operator = null;
+let error = false;
 
 document.querySelector('.clear').addEventListener('click', (e) => {
   updateDisplay(0);
@@ -12,12 +13,15 @@ document.querySelector('.clear').addEventListener('click', (e) => {
   secondInput = 0;
   enteredSecondInput = false;
   operator = null;
+  error = false;
 });
 
 document.querySelectorAll('.numbers button').forEach((button) => {
   if (Number.isNaN(+button.textContent)) return;
   
   button.addEventListener('click', (e) => {
+    if (error) return;
+    
     if (!enteredSecondInput && operator !== null) {
       updateDisplay(button.textContent);
       secondInput = +button.textContent;
@@ -32,6 +36,14 @@ document.querySelectorAll('.numbers button').forEach((button) => {
 
 document.querySelectorAll('.operators button').forEach((button) => {
   button.addEventListener('click', (e) => {
+    if (error) return;
+
+    if (operator === '/' && secondInput === 0) {
+      updateDisplay('ERR: Division by Zero');
+      error = -1;
+      return;
+    }
+
     if (operator !== null && (enteredSecondInput || button.textContent === '=')) {
       firstInput = operate(operator, firstInput, secondInput);
       updateDisplay(firstInput);
