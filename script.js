@@ -4,6 +4,7 @@ const display = document.querySelector('.display');
 let firstInput;
 let secondInput;
 let enteredSecondInput = false;
+let enteredDot = false;
 let operator = null;
 let error = false;
 
@@ -16,16 +17,24 @@ document.querySelector('.clear').addEventListener('click', (e) => {
   error = false;
 });
 
+document.querySelector('.dot').addEventListener('click', (e) => {
+  if (enteredDot) return;
+
+  updateDisplay(display.textContent + '.');
+  enteredDot = true;
+});
+
 document.querySelectorAll('.numbers button').forEach((button) => {
   if (Number.isNaN(+button.textContent)) return;
   
   button.addEventListener('click', (e) => {
     if (error) return;
-    
+
     if (!enteredSecondInput && operator !== null) {
       updateDisplay(button.textContent);
       secondInput = +button.textContent;
       enteredSecondInput = true;
+      enteredDot = false;
       return;
     }
 
