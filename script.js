@@ -82,7 +82,9 @@ function Calculator() {
 
   this.appendDot = function() {
     if (display.textContent.includes('.')) return;
+
     this.appendToDisplay('.');
+    resolveActive();
   }
 
   this.backspace = function() {
@@ -91,6 +93,7 @@ function Calculator() {
     let backspaced = display.textContent.slice(0, -1);
     if (backspaced === '') backspaced = '0';
 
+    resolveActive();
     this.updateDisplay(backspaced);
     active.value = +backspaced;
   }
@@ -112,6 +115,13 @@ function Calculator() {
       evaluated,
       operator
     };
+  }
+
+  function resolveActive() {
+    if (evaluated) {
+      active = firstInput;
+      evaluated = false;
+    }
   }
 }
 
