@@ -27,21 +27,34 @@ function Calculator() {
   const secondInput = new Input(0);
   let operator = null;
   let enter = false;
+  let evaluated = false;
   let active = firstInput;
 
   this.appendDigit = function(digit) {
-    if (display.textContent === '0' || (operator && enter)) {
+    if (evaluated) {
+      active = firstInput;
+      enter = true;
+    }
+
+    if (display.textContent === '0' || (operator && enter) || evaluated) {
       this.updateDisplay(digit);
+      evaluated = false;
       enter = false;
     }
     else {
       this.appendToDisplay(digit);
     }
+
     active.value = +display.textContent;
   }
 
   this.setOperator = function(op) {
     operator = op;
+
+    if (evaluated) {
+      secondInput.value = firstInput.value;
+      evaluated = false;
+    }
 
     if (active === firstInput) {
       secondInput.value = firstInput.value;
@@ -51,7 +64,13 @@ function Calculator() {
   }
 
   this.evaluate = function() {
+    if (display.textContent.slice(-1) === '.') this.updateDisplay(+display.textContent);
+    if (active === firstInput) return;
     
+    const result = operate(operator, firstInput.value, secondInput.value);
+    firstInput.value = result;
+    this.updateDisplay(result);
+    evaluated = true;
   }
 
   this.appendDot = function() {
@@ -74,7 +93,7 @@ function Calculator() {
   }
 
   this.appendToDisplay = function(string) {
-    display.textContent += string;
+    this.updateDisplay(display.textContent + string);
   }
 
   this.expose = function() {
@@ -83,6 +102,7 @@ function Calculator() {
       secondInput,
       active,
       enter,
+      evaluated,
       operator
     };
   }
