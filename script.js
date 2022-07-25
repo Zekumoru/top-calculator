@@ -1,5 +1,45 @@
 
-const display = document.querySelector('.display');
+const calculator = new Calculator();
+const data = calculator.expose();
+
+document.querySelectorAll('button.digit').forEach((digit) => {
+  digit.addEventListener('click', (e) => {
+    calculator.handleDigitInput(digit.textContent);
+  });
+});
+
+function Input(value) {
+  this.value = value;
+}
+
+function Calculator() {
+  const display = document.querySelector('.display');
+  const firstInput = new Input(0);
+  const secondInput = new Input(0);
+  let active = firstInput;
+
+  this.handleDigitInput = function(digit) {
+    if (display.textContent === '0') {
+      this.updateDisplay(digit);
+    }
+    else {
+      this.updateDisplay(display.textContent + digit);
+    }
+    active.value = +display.textContent;
+  }
+
+  this.updateDisplay = function(string) {
+    display.textContent = string;
+  }
+
+  this.expose = function() {
+    return {
+      firstInput,
+      secondInput,
+      active
+    };
+  }
+}
 
 function add(a, b) {
   return a + b;
