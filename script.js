@@ -61,6 +61,7 @@ function Calculator() {
       firstInput,
       secondInput,
       active,
+      enter,
       operator
     };
   }
