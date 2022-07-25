@@ -1,5 +1,5 @@
 
-const calculator = new Calculator();
+const calculator = new Calculator(document.querySelector('.display'));
 
 document.querySelectorAll('button.digit').forEach((digit) => {
   digit.addEventListener('click', (e) => {
@@ -22,8 +22,8 @@ function Input(value) {
   this.value = value;
 }
 
-function Calculator() {
-  const display = document.querySelector('.display');
+function Calculator(_display) {
+  const display = _display;
   const firstInput = new Input(0);
   const secondInput = new Input(0);
   let operator = null;
