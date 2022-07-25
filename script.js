@@ -4,7 +4,7 @@ const data = calculator.expose();
 
 document.querySelectorAll('button.digit').forEach((digit) => {
   digit.addEventListener('click', (e) => {
-    calculator.handleDigitInput(digit.textContent);
+    calculator.appendDigit(digit.textContent);
   });
 });
 
@@ -18,7 +18,7 @@ function Calculator() {
   const secondInput = new Input(0);
   let active = firstInput;
 
-  this.handleDigitInput = function(digit) {
+  this.appendDigit = function(digit) {
     if (display.textContent === '0') {
       this.updateDisplay(digit);
     }
