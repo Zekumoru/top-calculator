@@ -42,7 +42,7 @@ function Calculator(_display) {
   }
 
   this.appendDigit = function(digit) {
-    if (evaluated && !enter) {
+    if (evaluated) {
       active = firstInput;
       enter = true;
     }
@@ -113,7 +113,8 @@ function Calculator(_display) {
       active,
       enter,
       evaluated,
-      operator
+      operator,
+      display: display.textContent
     };
   }
 
