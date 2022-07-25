@@ -82,6 +82,12 @@ function Calculator(_display) {
 
   this.appendDot = function() {
     if (display.textContent.includes('.')) return;
+    if (enter) {
+      this.updateDisplay('0.');
+      active.value = 0;
+      enter = false;
+      return;
+    }
 
     this.appendToDisplay('.');
     resolveActive();
