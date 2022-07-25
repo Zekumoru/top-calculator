@@ -13,6 +13,8 @@ document.querySelectorAll('button.arithmetic').forEach((arithmetic) => {
   });
 });
 
+document.querySelector('button.equal').addEventListener('click', calculator.evaluate);
+
 function Input(value) {
   this.value = value;
 }
@@ -44,6 +46,10 @@ function Calculator() {
       active = secondInput;
       enter = true;
     }
+  }
+
+  this.evaluate = function() {
+    
   }
 
   this.updateDisplay = function(string) {
