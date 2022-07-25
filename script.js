@@ -16,6 +16,7 @@ document.querySelectorAll('button.arithmetic').forEach((arithmetic) => {
 document.querySelector('button.equal').addEventListener('click', (e) => calculator.evaluate());
 document.querySelector('button.dot').addEventListener('click', (e) => calculator.appendDot());
 document.querySelector('button.backspace').addEventListener('click', (e) => calculator.backspace());
+document.querySelector('button.clear').addEventListener('click', (e) => calculator.clear());
 
 function Input(value) {
   this.value = value;
@@ -30,8 +31,18 @@ function Calculator() {
   let evaluated = false;
   let active = firstInput;
 
+  this.clear = function() {
+    firstInput.value = 0;
+    secondInput.value = 0;
+    operator = null;
+    enter = false;
+    evaluated = false;
+    active = firstInput;
+    this.updateDisplay('0');
+  }
+
   this.appendDigit = function(digit) {
-    if (evaluated) {
+    if (evaluated && !enter) {
       active = firstInput;
       enter = true;
     }
@@ -51,14 +62,10 @@ function Calculator() {
   this.setOperator = function(op) {
     operator = op;
 
-    if (evaluated) {
-      secondInput.value = firstInput.value;
-      evaluated = false;
-    }
-
-    if (active === firstInput) {
+    if (active === firstInput || evaluated) {
       secondInput.value = firstInput.value;
       active = secondInput;
+      evaluated = false;
       enter = true;
     }
   }
