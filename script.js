@@ -18,14 +18,15 @@ document.querySelector('button.dot').addEventListener('click', (e) => calculator
 document.querySelector('button.backspace').addEventListener('click', (e) => calculator.backspace());
 document.querySelector('button.clear').addEventListener('click', (e) => calculator.clear());
 
-function Input(value) {
+function Input(name, value) {
+  this.name = name;
   this.value = value;
 }
 
 function Calculator(_display) {
   const display = _display;
-  const firstInput = new Input(0);
-  const secondInput = new Input(0);
+  const firstInput = new Input('first', 0);
+  const secondInput = new Input('second', 0);
   let operator = null;
   let enter = false;
   let evaluated = false;
@@ -60,6 +61,8 @@ function Calculator(_display) {
   }
 
   this.setOperator = function(op) {
+    if (!evaluated && active === secondInput) this.evaluate();
+
     operator = op;
 
     if (active === firstInput || evaluated) {
