@@ -6,14 +6,15 @@ let secondInput;
 let operator = null;
 let enteredSecondInput = false;
 let enteredDot = false;
+let equal = false;
 let error = false;
 
 document.querySelector('.clear').addEventListener('click', (e) => {
-  updateDisplay(0);
   reset();
 });
 
 document.querySelector('.dot').addEventListener('click', (e) => {
+  if (equal) reset();
   if (!enteredSecondInput && operator !== null) {
     updateDisplay('0.');
     secondInput = 0;
@@ -41,6 +42,7 @@ document.querySelector('.backspace').addEventListener('click', (e) => {
 document.querySelectorAll('.numbers button.digit').forEach((button) => {
   button.addEventListener('click', (e) => {
     if (error) return;
+    if (equal) reset();
 
     if (!enteredSecondInput && operator !== null) {
       updateDisplay(button.textContent);
@@ -71,10 +73,14 @@ document.querySelectorAll('.operators button.operator').forEach((button) => {
       enteredSecondInput = false;
     }
 
-    if (button.textContent === '=') return;
+    if (button.textContent === '=') {
+      equal = true;
+      return;
+    }
 
     operator = button.textContent;
     secondInput = firstInput;
+    equal = false;
   });
 });
 
@@ -83,11 +89,13 @@ function updateDisplay(string) {
 }
 
 function reset() {
+  display.textContent = '0';
   firstInput = 0;
   secondInput = 0;
   operator = null;
   enteredSecondInput = false;
   enteredDot = false;
+  equal = false;
   error = false;
 }
 
