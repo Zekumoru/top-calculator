@@ -89,7 +89,7 @@ function Calculator() {
   }
 
   this.updateDisplay = function(string) {
-    display.textContent = string;
+    display.textContent = (typeof string === 'number')? +string.toFixed(10) : string;
   }
 
   this.appendToDisplay = function(string) {
