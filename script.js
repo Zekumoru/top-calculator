@@ -13,7 +13,8 @@ document.querySelectorAll('button.arithmetic').forEach((arithmetic) => {
   });
 });
 
-document.querySelector('button.equal').addEventListener('click', calculator.evaluate);
+document.querySelector('button.equal').addEventListener('click', (e) => calculator.evaluate());
+document.querySelector('button.dot').addEventListener('click', (e) => calculator.appendDot());
 
 function Input(value) {
   this.value = value;
@@ -33,7 +34,7 @@ function Calculator() {
       enter = false;
     }
     else {
-      this.updateDisplay(display.textContent + digit);
+      this.appendToDisplay(digit);
     }
     active.value = +display.textContent;
   }
@@ -52,8 +53,17 @@ function Calculator() {
     
   }
 
+  this.appendDot = function() {
+    if (display.textContent.includes('.')) return;
+    this.appendToDisplay('.');
+  }
+
   this.updateDisplay = function(string) {
     display.textContent = string;
+  }
+
+  this.appendToDisplay = function(string) {
+    display.textContent += string;
   }
 
   this.expose = function() {
