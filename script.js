@@ -15,6 +15,7 @@ document.querySelectorAll('button.arithmetic').forEach((arithmetic) => {
 
 document.querySelector('button.equal').addEventListener('click', (e) => calculator.evaluate());
 document.querySelector('button.dot').addEventListener('click', (e) => calculator.appendDot());
+document.querySelector('button.backspace').addEventListener('click', (e) => calculator.backspace());
 
 function Input(value) {
   this.value = value;
@@ -56,6 +57,16 @@ function Calculator() {
   this.appendDot = function() {
     if (display.textContent.includes('.')) return;
     this.appendToDisplay('.');
+  }
+
+  this.backspace = function() {
+    if (display.textContent === '0') return;
+
+    let backspaced = display.textContent.slice(0, -1);
+    if (backspaced === '') backspaced = '0';
+
+    this.updateDisplay(backspaced);
+    active.value = +backspaced;
   }
 
   this.updateDisplay = function(string) {
