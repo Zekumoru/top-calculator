@@ -3,25 +3,39 @@ const display = document.querySelector('.display');
 
 let firstInput;
 let secondInput;
+let operator = null;
 let enteredSecondInput = false;
 let enteredDot = false;
-let operator = null;
 let error = false;
 
 document.querySelector('.clear').addEventListener('click', (e) => {
   updateDisplay(0);
-  firstInput = 0;
-  secondInput = 0;
-  enteredSecondInput = false;
-  operator = null;
-  error = false;
+  reset();
 });
 
 document.querySelector('.dot').addEventListener('click', (e) => {
+  if (!enteredSecondInput && operator !== null) {
+    updateDisplay('0.');
+    secondInput = 0;
+    enteredSecondInput = true;
+    return;
+  }
+
   if (enteredDot) return;
 
   updateDisplay(display.textContent + '.');
   enteredDot = true;
+});
+
+document.querySelector('.backspace').addEventListener('click', (e) => {
+  if (display.textContent === '0') return;
+  if (display.textContent.length === 1) {
+    updateDisplay('0');
+    return;
+  }
+
+  if (display.textContent.slice(-1) === '.') enteredDot = false;
+  updateDisplay(display.textContent.slice(0, -1));
 });
 
 document.querySelectorAll('.numbers button.digit').forEach((button) => {
@@ -66,6 +80,15 @@ document.querySelectorAll('.operators button.operator').forEach((button) => {
 
 function updateDisplay(string) {
   display.textContent = (typeof string === 'number')? +string.toFixed(10) : string;
+}
+
+function reset() {
+  firstInput = 0;
+  secondInput = 0;
+  operator = null;
+  enteredSecondInput = false;
+  enteredDot = false;
+  error = false;
 }
 
 function add(a, b) {
