@@ -1,10 +1,15 @@
 
 const calculator = new Calculator();
-const data = calculator.expose();
 
 document.querySelectorAll('button.digit').forEach((digit) => {
   digit.addEventListener('click', (e) => {
     calculator.appendDigit(digit.textContent);
+  });
+});
+
+document.querySelectorAll('button.arithmetic').forEach((arithmetic) => {
+  arithmetic.addEventListener('click', (e) => {
+    calculator.setOperator(arithmetic.textContent);
   });
 });
 
@@ -16,16 +21,29 @@ function Calculator() {
   const display = document.querySelector('.display');
   const firstInput = new Input(0);
   const secondInput = new Input(0);
+  let operator = null;
+  let enter = false;
   let active = firstInput;
 
   this.appendDigit = function(digit) {
-    if (display.textContent === '0') {
+    if (display.textContent === '0' || (operator && enter)) {
       this.updateDisplay(digit);
+      enter = false;
     }
     else {
       this.updateDisplay(display.textContent + digit);
     }
     active.value = +display.textContent;
+  }
+
+  this.setOperator = function(op) {
+    operator = op;
+
+    if (active === firstInput) {
+      secondInput.value = firstInput.value;
+      active = secondInput;
+      enter = true;
+    }
   }
 
   this.updateDisplay = function(string) {
@@ -36,7 +54,8 @@ function Calculator() {
     return {
       firstInput,
       secondInput,
-      active
+      active,
+      operator
     };
   }
 }
