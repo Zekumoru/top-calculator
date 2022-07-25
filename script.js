@@ -18,6 +18,35 @@ document.querySelector('button.dot').addEventListener('click', (e) => calculator
 document.querySelector('button.backspace').addEventListener('click', (e) => calculator.backspace());
 document.querySelector('button.clear').addEventListener('click', (e) => calculator.clear());
 
+window.addEventListener('keydown', (e) => {
+  if (!isNaN(e.key)) {
+    calculator.appendDigit(e.key);
+    return;
+  }
+
+  if ('+-/*'.includes(e.key)) {
+    calculator.setOperator(e.key);
+    return;
+  }
+
+  switch (e.key) {
+    case 'Enter':
+    case '=':
+      calculator.evaluate();
+      break;
+    case '.':
+      calculator.appendDot();
+      break;
+    case 'Backspace':
+      calculator.backspace();
+      break;
+    case 'Delete':
+    case 'Escape':
+      calculator.clear();
+      break;
+  }
+});
+
 function Input(name, value) {
   this.name = name;
   this.value = value;
