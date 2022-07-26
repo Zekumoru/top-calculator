@@ -4,6 +4,8 @@
   --primary-color: #18191a;
   --bg-enter-color: #00579e;
   --bg-dark-color: #1b1b1c;
+  --bg-operator-color: #1e2021;
+  --bg-operator-focus-color: #242729;
   --border-color: #545759;
   --border-focus-color: #0c82c7;
   --scrollbar-track-color: #202121;
@@ -140,6 +142,11 @@ button {
 .operators .operator {
   width: 48%;
   flex: 1 0 auto;
+  background-color: var(--bg-operator-color);
+}
+
+.operators .operator:hover {
+  background-color: var(--bg-operator-focus-color);
 }
 
 .clear-ops {
@@ -150,6 +157,12 @@ button {
 
 button.zero {
   flex: 1;
+}
+
+button.backspace {
+  width: 90%;
+  flex-grow: 0;
+  align-self: flex-end;
 }
 
 button.clear{
@@ -190,7 +203,11 @@ button.enter {
   color: var(--text-color);
 }
 
-.footer .copyright {
+.footer .info {
+  text-align: end;
+}
+
+.footer .info > * {
   font-size: 10px;
   color: var(--text-secondary-color);
 }
