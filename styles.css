@@ -3,6 +3,7 @@
   --text-secondary-color: #b8b8b8; 
   --primary-color: #18191a;
   --bg-enter-color: #00579e;
+  --bg-enter-hover-color: #015191;
   --bg-dark-color: #1b1b1c;
   --bg-operator-color: #1e2021;
   --bg-operator-focus-color: #242729;
@@ -179,6 +180,11 @@ button.enter {
   border-color: var(--bg-enter-color);
   background-color: var(--bg-enter-color);
   font-weight: 500;
+}
+
+button.enter:hover {
+  border-color: var(--bg-enter-hover-color);
+  background-color: var(--bg-enter-hover-color);
 }
 
 .footer {
