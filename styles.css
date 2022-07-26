@@ -1,6 +1,7 @@
 :root {
   --text-color: #e6e6e6;
-  --bg-dark-color: #18191a;
+  --primary-dark-color: #18191a;
+  --bg-dark-color: #1b1b1c;
   --scrollbar-track-color: #202121;
   --scrollbar-thumb-color: #4b4f57;
   --scrollbar-thumb-hover-color: #595e69;
@@ -97,6 +98,7 @@ button {
   display: flex;
   padding: 8px;
   gap: 32px;
+  background-color: var(--primary-dark-color);
 }
 
 .numbers {
