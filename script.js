@@ -1,5 +1,6 @@
 
-const calculator = new Calculator(document.querySelector('.display.main input'), document.querySelector('.display.main .result'));
+const display = document.querySelector('.display.main input');
+const calculator = new Calculator(display, document.querySelector('.display.main .result'));
 
 document.querySelectorAll('button.digit').forEach((digit) => {
   digit.addEventListener('click', (e) => {
@@ -21,11 +22,13 @@ document.querySelector('button.clear').addEventListener('click', (e) => calculat
 window.addEventListener('keydown', (e) => {
   if (!isNaN(e.key)) {
     calculator.appendDigit(e.key);
+    display.focus();
     return;
   }
 
   if ('+-/*'.includes(e.key)) {
     calculator.setOperator(e.key);
+    display.focus();
     return;
   }
 
@@ -33,16 +36,20 @@ window.addEventListener('keydown', (e) => {
     case 'Enter':
     case '=':
       calculator.evaluate();
+      display.focus();
       break;
     case '.':
       calculator.appendDot();
+      display.focus();
       break;
     case 'Backspace':
       calculator.backspace();
+      display.focus();
       break;
     case 'Delete':
     case 'Escape':
       calculator.clear();
+      display.focus();
       break;
   }
 });
@@ -59,7 +66,7 @@ function Calculator(_display, _operatorDisplay) {
   const secondInput = new Input('second', 0);
   const calculator = this;
   let operator = null;
-  let enter = false;
+  let startSecondInput = false;
   let evaluated = false;
   let active = firstInput;
 
@@ -67,7 +74,7 @@ function Calculator(_display, _operatorDisplay) {
     firstInput.value = 0;
     secondInput.value = 0;
     operator = null;
-    enter = false;
+    startSecondInput = false;
     evaluated = false;
     active = firstInput;
     this.updateDisplay('0');
@@ -78,13 +85,13 @@ function Calculator(_display, _operatorDisplay) {
     if (evaluated) {
       this.updateOperatorDisplay('');
       active = firstInput;
-      enter = true;
+      startSecondInput = true;
     }
 
-    if (display.value === '0' || (operator && enter) || evaluated) {
+    if (display.value === '0' || (operator && startSecondInput) || evaluated) {
       this.updateDisplay(digit);
       evaluated = false;
-      enter = false;
+      startSecondInput = false;
     }
     else {
       this.appendToDisplay(digit);
@@ -94,6 +101,15 @@ function Calculator(_display, _operatorDisplay) {
   }
 
   this.setOperator = function(op) {
+    if (evaluated && active === secondInput) {
+      operator = op;
+      secondInput.value = firstInput.value;
+      evaluated = false;
+      startSecondInput = true;
+      this.updateOperatorDisplay(op);
+      return;
+    }
+
     if (!evaluated && active === secondInput) this.evaluate();
 
     operator = op;
@@ -103,7 +119,7 @@ function Calculator(_display, _operatorDisplay) {
       secondInput.value = firstInput.value;
       active = secondInput;
       evaluated = false;
-      enter = true;
+      startSecondInput = true;
     }
   }
 
@@ -119,10 +135,10 @@ function Calculator(_display, _operatorDisplay) {
 
   this.appendDot = function() {
     if (display.value.includes('.')) return;
-    if (enter) {
+    if (startSecondInput) {
       this.updateDisplay('0.');
       active.value = 0;
-      enter = false;
+      startSecondInput = false;
       return;
     }
 
@@ -158,7 +174,7 @@ function Calculator(_display, _operatorDisplay) {
       firstInput,
       secondInput,
       active,
-      enter,
+      startSecondInput,
       evaluated,
       operator,
       display: display.value
