@@ -1,5 +1,5 @@
 
-const calculator = new Calculator(document.querySelector('.display'));
+const calculator = new Calculator(document.querySelector('.display.main input'), document.querySelector('.display.main .result'));
 
 document.querySelectorAll('button.digit').forEach((digit) => {
   digit.addEventListener('click', (e) => {
@@ -13,7 +13,7 @@ document.querySelectorAll('button.arithmetic').forEach((arithmetic) => {
   });
 });
 
-document.querySelector('button.equal').addEventListener('click', (e) => calculator.evaluate());
+document.querySelector('button.enter').addEventListener('click', (e) => calculator.evaluate());
 document.querySelector('button.dot').addEventListener('click', (e) => calculator.appendDot());
 document.querySelector('button.backspace').addEventListener('click', (e) => calculator.backspace());
 document.querySelector('button.clear').addEventListener('click', (e) => calculator.clear());
@@ -52,10 +52,12 @@ function Input(name, value) {
   this.value = value;
 }
 
-function Calculator(_display) {
+function Calculator(_display, _operatorDisplay) {
   const display = _display;
+  const operatorDisplay = _operatorDisplay;
   const firstInput = new Input('first', 0);
   const secondInput = new Input('second', 0);
+  const calculator = this;
   let operator = null;
   let enter = false;
   let evaluated = false;
@@ -69,15 +71,17 @@ function Calculator(_display) {
     evaluated = false;
     active = firstInput;
     this.updateDisplay('0');
+    this.updateOperatorDisplay('');
   }
 
   this.appendDigit = function(digit) {
     if (evaluated) {
+      this.updateOperatorDisplay('');
       active = firstInput;
       enter = true;
     }
 
-    if (display.textContent === '0' || (operator && enter) || evaluated) {
+    if (display.value === '0' || (operator && enter) || evaluated) {
       this.updateDisplay(digit);
       evaluated = false;
       enter = false;
@@ -86,13 +90,14 @@ function Calculator(_display) {
       this.appendToDisplay(digit);
     }
 
-    active.value = +display.textContent;
+    active.value = +display.value;
   }
 
   this.setOperator = function(op) {
     if (!evaluated && active === secondInput) this.evaluate();
 
     operator = op;
+    this.updateOperatorDisplay(op);
 
     if (active === firstInput || evaluated) {
       secondInput.value = firstInput.value;
@@ -103,7 +108,7 @@ function Calculator(_display) {
   }
 
   this.evaluate = function() {
-    if (display.textContent.slice(-1) === '.') this.updateDisplay(+display.textContent);
+    if (display.value.slice(-1) === '.') this.updateDisplay(+display.value);
     if (active === firstInput) return;
     
     const result = operate(operator, firstInput.value, secondInput.value);
@@ -113,7 +118,7 @@ function Calculator(_display) {
   }
 
   this.appendDot = function() {
-    if (display.textContent.includes('.')) return;
+    if (display.value.includes('.')) return;
     if (enter) {
       this.updateDisplay('0.');
       active.value = 0;
@@ -126,9 +131,9 @@ function Calculator(_display) {
   }
 
   this.backspace = function() {
-    if (display.textContent === '0') return;
+    if (display.value === '0') return;
 
-    let backspaced = display.textContent.slice(0, -1);
+    let backspaced = display.value.slice(0, -1);
     if (backspaced === '') backspaced = '0';
 
     resolveActive();
@@ -136,12 +141,16 @@ function Calculator(_display) {
     active.value = +backspaced;
   }
 
+  this.updateOperatorDisplay = function(string) {
+    operatorDisplay.textContent = string;
+  }
+
   this.updateDisplay = function(string) {
-    display.textContent = (typeof string === 'number')? +string.toFixed(10) : string;
+    display.value = (typeof string === 'number')? +string.toFixed(10) : string;
   }
 
   this.appendToDisplay = function(string) {
-    this.updateDisplay(display.textContent + string);
+    this.updateDisplay(display.value + string);
   }
 
   this.expose = function() {
@@ -152,7 +161,7 @@ function Calculator(_display) {
       enter,
       evaluated,
       operator,
-      display: display.textContent
+      display: display.value
     };
   }
 
@@ -191,6 +200,7 @@ function Calculator(_display) {
     if (evaluated) {
       active = firstInput;
       evaluated = false;
+      calculator.updateOperatorDisplay('');
     }
   }
 }
