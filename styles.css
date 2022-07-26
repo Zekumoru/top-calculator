@@ -26,7 +26,7 @@ body {
 #calculator {
   width: 720px;
   border: 2px solid grey;
-  padding-bottom: 16px;
+  border-radius: 8px;
 }
 
 ::-webkit-scrollbar {
@@ -86,5 +86,83 @@ input[type=text] {
 }
 
 button {
+  padding: 0.8rem 1.2rem;
   background-color: transparent;
+  border: 2px solid grey;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.inputs {
+  display: flex;
+  padding: 8px;
+  gap: 32px;
+}
+
+.numbers {
+  display: flex;
+  gap: 8px;
+}
+
+.numbers .left {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.numbers .right {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.right .digit {
+  width: 30%;
+  flex: 1 0 auto;
+}
+
+.operators {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.operators .operator {
+  width: 48%;
+  flex: 1 0 auto;
+}
+
+.clear-ops {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+button.zero {
+  flex: 1;
+}
+
+button.clear{
+  border: none;
+  flex: 1;
+}
+
+.footer {
+  display: flex;
+  padding: 0 14px 8px 14px;
+}
+
+.footer .buttons {
+  flex: 1;
+  display: flex;
+  gap: 16px;
+}
+
+.footer button {
+  border: none;
+  padding: 0;
+}
+
+.footer .copyright {
+  font-size: 10px;
 }
