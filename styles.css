@@ -150,6 +150,16 @@ button {
   background-color: var(--bg-operator-focus-color);
 }
 
+.operators .operator:disabled {
+  cursor: default;
+  color: var(--text-secondary-color);
+  background-color: var(--primary-color);
+}
+
+.operators .operator:disabled:hover {
+  background-color: var(--primary-color);
+}
+
 .clear-ops {
   display: flex;
   flex-direction: column;
