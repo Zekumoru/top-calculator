@@ -64,7 +64,6 @@ function Calculator(_display, _operatorDisplay) {
   const operatorDisplay = _operatorDisplay;
   const firstInput = new Input('first', 0);
   const secondInput = new Input('second', 0);
-  const calculator = this;
   let operator = null;
   let startSecondInput = false;
   let evaluated = false;
@@ -82,11 +81,7 @@ function Calculator(_display, _operatorDisplay) {
   }
 
   this.appendDigit = function(digit) {
-    if (evaluated) {
-      this.updateOperatorDisplay('');
-      active = firstInput;
-      startSecondInput = true;
-    }
+    this.resolveActive(() => startSecondInput = true);
 
     if (display.value === '0' || (operator && startSecondInput) || evaluated) {
       this.updateDisplay(digit);
@@ -135,7 +130,7 @@ function Calculator(_display, _operatorDisplay) {
     }
 
     this.appendToDisplay('.');
-    resolveActive();
+    this.resolveActive();
   }
 
   this.backspace = function() {
@@ -144,9 +139,18 @@ function Calculator(_display, _operatorDisplay) {
     let backspaced = display.value.slice(0, -1);
     if (backspaced === '') backspaced = '0';
 
-    resolveActive();
+    this.resolveActive();
     this.updateDisplay(backspaced);
     active.value = +backspaced;
+  }
+
+  this.resolveActive = function(fn) {
+    if (evaluated) {
+      active = firstInput;
+      evaluated = false;
+      this.updateOperatorDisplay('');
+      fn();
+    }
   }
 
   this.updateOperatorDisplay = function(string) {
@@ -201,14 +205,6 @@ function Calculator(_display, _operatorDisplay) {
         return divide(a, b);
       default:
         return null;
-    }
-  }
-
-  function resolveActive() {
-    if (evaluated) {
-      active = firstInput;
-      evaluated = false;
-      calculator.updateOperatorDisplay('');
     }
   }
 }
