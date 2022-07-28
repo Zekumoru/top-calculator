@@ -150,7 +150,7 @@ function Calculator(_display, _operatorDisplay) {
       evaluated = false;
       operator = null;
       this.updateOperatorDisplay('');
-      if (fn === 'function') fn();
+      if (typeof fn === 'function') fn();
     }
   }
 
