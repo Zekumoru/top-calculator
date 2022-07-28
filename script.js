@@ -80,10 +80,13 @@ function Calculator(_display, _operatorDisplay) {
     this.updateOperatorDisplay('');
   }
 
-  this.appendDigit = function(digit) {
-    this.resolveActive(() => startSecondInput = true);
+  this.appendDigit = function(digit) {let reset = false;
+    this.resolveActive(() => {
+      startSecondInput = true
+      reset = true;
+    });
 
-    if (display.value === '0' || (operator && startSecondInput) || evaluated) {
+    if (display.value === '0' || (operator && startSecondInput) || evaluated || reset) {
       this.updateDisplay(digit);
       evaluated = false;
       startSecondInput = false;
