@@ -39,7 +39,7 @@ const isOverflowed = ({ clientWidth, clientHeight, scrollWidth, scrollHeight }) 
 
 let overflowed = false;
 calculator.onEvaluated = (operator, leftOperand, rightOperand) => {
-  const entry = createEntry(`${leftOperand} ${operator} ${rightOperand}`, '');
+  const entry = createEntry(`${+leftOperand.toFixed(10)} ${operator} ${+rightOperand.toFixed(10)}`, '');
   appendToScrollableDisplay(entry);
 };
 
@@ -68,6 +68,8 @@ document.querySelector('button.enter').addEventListener('click', (e) => calculat
 document.querySelector('button.dot').addEventListener('click', (e) => calculator.appendDot());
 document.querySelector('button.backspace').addEventListener('click', (e) => calculator.backspace());
 document.querySelector('button.clear').addEventListener('click', (e) => calculator.clear());
+document.querySelector('button.percent').addEventListener('click', (e) => calculator.percent());
+document.querySelector('button.negate').addEventListener('click', (e) => calculator.negate());
 
 window.addEventListener('keydown', (e) => {
   if (!isNaN(e.key)) {
@@ -99,6 +101,10 @@ window.addEventListener('keydown', (e) => {
     case 'Delete':
     case 'Escape':
       calculator.clear();
+      display.focus();
+      break;
+    case '%':
+      calculator.percent();
       display.focus();
       break;
   }
@@ -202,6 +208,18 @@ function Calculator(_display, _operatorDisplay) {
     this.resolveActive();
     this.updateDisplay(backspaced);
     active.value = +backspaced;
+  }
+
+  this.percent = function() {
+    this.resolveActive();
+    active.value /= 100;
+    this.updateDisplay(active.value);
+  }
+
+  this.negate = function() {
+    this.resolveActive();
+    active.value = -active.value;
+    this.updateDisplay(active.value);
   }
 
   this.resolveActive = function(fn) {
