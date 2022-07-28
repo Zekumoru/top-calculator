@@ -101,16 +101,7 @@ function Calculator(_display, _operatorDisplay) {
   }
 
   this.setOperator = function(op) {
-    if (evaluated && active === secondInput) {
-      operator = op;
-      secondInput.value = firstInput.value;
-      evaluated = false;
-      startSecondInput = true;
-      this.updateOperatorDisplay(op);
-      return;
-    }
-
-    if (!evaluated && active === secondInput) this.evaluate();
+    if (!evaluated && !startSecondInput) this.evaluate();
 
     operator = op;
     this.updateOperatorDisplay(op);
@@ -130,6 +121,7 @@ function Calculator(_display, _operatorDisplay) {
     const result = operate(operator, firstInput.value, secondInput.value);
     firstInput.value = result;
     this.updateDisplay(result);
+    this.updateOperatorDisplay('=');
     evaluated = true;
   }
 
