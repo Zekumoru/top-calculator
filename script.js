@@ -189,8 +189,8 @@ function Calculator(_display, _operatorDisplay) {
       return;
     }
 
-    this.appendToDisplay('.');
     this.resolveActive();
+    this.appendToDisplay('.');
   }
 
   this.backspace = function() {
