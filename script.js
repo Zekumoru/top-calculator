@@ -148,6 +148,7 @@ function Calculator(_display, _operatorDisplay) {
     if (evaluated) {
       active = firstInput;
       evaluated = false;
+      operator = null;
       this.updateOperatorDisplay('');
       if (fn === 'function') fn();
     }
