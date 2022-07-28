@@ -122,7 +122,7 @@ function Calculator(_display, _operatorDisplay) {
 
   this.appendDot = function() {
     if (display.value.includes('.')) return;
-    if (startSecondInput) {
+    if (!evaluated && startSecondInput) {
       this.updateDisplay('0.');
       active.value = 0;
       startSecondInput = false;
