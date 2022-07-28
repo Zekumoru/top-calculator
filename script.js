@@ -1,6 +1,56 @@
 
 const display = document.querySelector('.display.main input');
+const scrollableDisplay = document.querySelector('.scrollable-display');
 const calculator = new Calculator(display, document.querySelector('.display.main .result'));
+
+const createEntry = (input, result) => {
+  const entry = document.createElement('div');
+  entry.classList.add('display');
+
+  const previousInput = document.createElement('input');
+  previousInput.type = 'text';
+  previousInput.value = input;
+  previousInput.readOnly = true;
+
+  const right = document.createElement('div');
+  right.classList.add('result');
+  right.textContent = result;
+  
+  entry.appendChild(previousInput);
+  entry.appendChild(right);
+
+  return entry;
+};
+
+const appendToScrollableDisplay = (entry) => {
+  scrollableDisplay.insertBefore(entry, scrollableDisplay.firstChild);
+
+  if (!overflowed && isOverflowed(scrollableDisplay)) {
+    scrollableDisplay.lastElementChild.style.borderTopColor = 'transparent';
+    overflowed = true;
+  }
+
+  scrollableDisplay.scrollTop = scrollableDisplay.scrollHeight;
+};
+
+const isOverflowed = ({ clientWidth, clientHeight, scrollWidth, scrollHeight }) => {
+  return scrollHeight > clientHeight || scrollWidth > clientWidth;
+};
+
+let overflowed = false;
+calculator.onEvaluated = (operator, leftOperand, rightOperand) => {
+  const entry = createEntry(`${leftOperand} ${operator} ${rightOperand}`, '');
+  appendToScrollableDisplay(entry);
+};
+
+calculator.onNewInput = (display, operator) => {
+  const entry = createEntry(display, '=');
+  appendToScrollableDisplay(entry);
+};
+
+calculator.onClear = () => {
+  scrollableDisplay.innerHTML = '';
+};
 
 document.querySelectorAll('button.digit').forEach((digit) => {
   digit.addEventListener('click', (e) => {
@@ -69,6 +119,10 @@ function Calculator(_display, _operatorDisplay) {
   let evaluated = false;
   let active = firstInput;
 
+  this.onEvaluated;
+  this.onNewInput;
+  this.onClear;
+
   this.clear = function() {
     firstInput.value = 0;
     secondInput.value = 0;
@@ -78,12 +132,14 @@ function Calculator(_display, _operatorDisplay) {
     active = firstInput;
     this.updateDisplay('0');
     this.updateOperatorDisplay('');
+    if (typeof this.onClear === 'function') this.onClear();
   }
 
   this.appendDigit = function(digit) {let reset = false;
     this.resolveActive(() => {
       startSecondInput = true
       reset = true;
+      if (typeof this.onNewInput === 'function') this.onNewInput(display.value, operatorDisplay.textContent);
     });
 
     if (display.value === '0' || (operator && startSecondInput) || evaluated || reset) {
@@ -117,10 +173,12 @@ function Calculator(_display, _operatorDisplay) {
     if (active === firstInput) return;
     
     const result = operate(operator, firstInput.value, secondInput.value);
+    const previousFirstValue = firstInput.value;
     firstInput.value = result;
     this.updateDisplay(result);
     this.updateOperatorDisplay('=');
     evaluated = true;
+    if (typeof this.onEvaluated === 'function') this.onEvaluated(operator, previousFirstValue, secondInput.value, result);
   }
 
   this.appendDot = function() {

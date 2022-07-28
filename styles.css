@@ -44,7 +44,7 @@ body {
   height: 280px;
   overflow-y: auto;
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   border-top: 2px solid var(--border-color);
   border-left: 2px solid var(--border-color);
   border-right: 2px solid var(--border-color);
@@ -58,7 +58,7 @@ body {
   border-radius: 0 0 8px 8px;
 }
 
-.scrollable-display > :first-child {
+.scrollable-display > :last-child {
   margin-top: auto !important;
 }
 
