@@ -139,7 +139,6 @@ function Calculator(_display, _operatorDisplay) {
     this.resolveActive(() => {
       startSecondInput = true
       reset = true;
-      if (typeof this.onNewInput === 'function') this.onNewInput(display.value, operatorDisplay.textContent);
     });
 
     if (display.value === '0' || (operator && startSecondInput) || evaluated || reset) {
@@ -211,6 +210,7 @@ function Calculator(_display, _operatorDisplay) {
       evaluated = false;
       operator = null;
       this.updateOperatorDisplay('');
+      if (typeof this.onNewInput === 'function') this.onNewInput(display.value, operatorDisplay.textContent);
       if (typeof fn === 'function') fn();
     }
   }
