@@ -139,7 +139,7 @@ function Calculator(_display, _operatorDisplay) {
     this.updateDisplay('0');
     this.updateOperatorDisplay('');
     if (typeof this.onClear === 'function') this.onClear();
-  }
+  };
 
   this.appendDigit = function(digit) {let reset = false;
     this.resolveActive(() => {
@@ -157,7 +157,7 @@ function Calculator(_display, _operatorDisplay) {
     }
 
     active.value = +display.value;
-  }
+  };
 
   this.setOperator = function(op) {
     if (!evaluated && !startSecondInput) this.evaluate();
@@ -171,7 +171,7 @@ function Calculator(_display, _operatorDisplay) {
       evaluated = false;
       startSecondInput = true;
     }
-  }
+  };
 
   this.evaluate = function() {
     if (display.value.slice(-1) === '.') this.updateDisplay(+display.value);
@@ -184,7 +184,7 @@ function Calculator(_display, _operatorDisplay) {
     this.updateOperatorDisplay('=');
     evaluated = true;
     if (typeof this.onEvaluated === 'function') this.onEvaluated(operator, previousFirstValue, secondInput.value, result);
-  }
+  };
 
   this.appendDot = function() {
     if (display.value.includes('.')) return;
@@ -197,7 +197,7 @@ function Calculator(_display, _operatorDisplay) {
 
     this.resolveActive();
     this.appendToDisplay('.');
-  }
+  };
 
   this.backspace = function() {
     if (display.value === '0') return;
@@ -208,19 +208,19 @@ function Calculator(_display, _operatorDisplay) {
     this.resolveActive();
     this.updateDisplay(backspaced);
     active.value = +backspaced;
-  }
+  };
 
   this.percent = function() {
     this.resolveActive();
     active.value /= 100;
     this.updateDisplay(active.value);
-  }
+  };
 
   this.negate = function() {
     this.resolveActive();
     active.value = -active.value;
     this.updateDisplay(active.value);
-  }
+  };
 
   this.resolveActive = function(fn) {
     if (evaluated) {
@@ -231,19 +231,19 @@ function Calculator(_display, _operatorDisplay) {
       if (typeof this.onNewInput === 'function') this.onNewInput(display.value, operatorDisplay.textContent);
       if (typeof fn === 'function') fn();
     }
-  }
+  };
 
   this.updateOperatorDisplay = function(string) {
     operatorDisplay.textContent = string;
-  }
+  };
 
   this.updateDisplay = function(string) {
     display.value = (typeof string === 'number')? +string.toFixed(10) : string;
-  }
+  };
 
   this.appendToDisplay = function(string) {
     this.updateDisplay(display.value + string);
-  }
+  };
 
   this.expose = function() {
     return {
@@ -255,7 +255,7 @@ function Calculator(_display, _operatorDisplay) {
       operator,
       display: display.value
     };
-  }
+  };
 
   function add(a, b) {
     return a + b;
