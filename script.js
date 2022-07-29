@@ -15,60 +15,25 @@ const calculator = new ClassicCalculator({
 
 document.querySelectorAll('button.digit').forEach((digit) => {
   digit.addEventListener('click', (e) => {
-    calculator.appendDigit(digit.textContent);
+    calculator.handleKeyDown(digit.textContent);
   });
 });
 
 document.querySelectorAll('button.arithmetic').forEach((arithmetic) => {
   arithmetic.addEventListener('click', (e) => {
-    calculator.setOperator(arithmetic.textContent);
+    calculator.handleKeyDown(arithmetic.textContent);
   });
 });
 
-document.querySelector('button.enter').addEventListener('click', (e) => calculator.evaluate());
-document.querySelector('button.dot').addEventListener('click', (e) => calculator.appendDot());
-document.querySelector('button.backspace').addEventListener('click', (e) => calculator.backspace());
-document.querySelector('button.clear').addEventListener('click', (e) => calculator.clear());
-document.querySelector('button.percent').addEventListener('click', (e) => calculator.percent());
-document.querySelector('button.negate').addEventListener('click', (e) => calculator.negate());
+document.querySelector('button.enter').addEventListener('click', (e) => calculator.handleKeyDown(e.target.textContent));
+document.querySelector('button.dot').addEventListener('click', (e) => calculator.handleKeyDown(e.target.textContent));
+document.querySelector('button.backspace').addEventListener('click', (e) => calculator.handleKeyDown(e.target.textContent));
+document.querySelector('button.clear').addEventListener('click', (e) => calculator.handleKeyDown(e.target.textContent));
+document.querySelector('button.percent').addEventListener('click', (e) => calculator.handleKeyDown(e.target.textContent));
+document.querySelector('button.negate').addEventListener('click', (e) => calculator.handleKeyDown(e.target.textContent));
 
 window.addEventListener('keydown', (e) => {
-  if (!isNaN(e.key)) {
-    calculator.appendDigit(e.key);
-    display.focus();
-    return;
-  }
-
-  if ('+-/*'.includes(e.key)) {
-    calculator.setOperator(e.key);
-    display.focus();
-    return;
-  }
-
-  switch (e.key) {
-    case 'Enter':
-    case '=':
-      calculator.evaluate();
-      display.focus();
-      break;
-    case '.':
-      calculator.appendDot();
-      display.focus();
-      break;
-    case 'Backspace':
-      calculator.backspace();
-      display.focus();
-      break;
-    case 'Delete':
-    case 'Escape':
-      calculator.clear();
-      display.focus();
-      break;
-    case '%':
-      calculator.percent();
-      display.focus();
-      break;
-  }
+  calculator.handleKeyDown(e.key);
 });
 
 function ClassicCalculator({_display, _operatorDisplay, _scrollableDisplay, _currentOperandDisplay}) {
@@ -98,6 +63,45 @@ function ClassicCalculator({_display, _operatorDisplay, _scrollableDisplay, _cur
 
   this.onClear = function() {
     scrollableDisplay.clear();
+  };
+
+  this.handleKeyDown = function(key) {
+    if (!isNaN(key)) {
+      calculator.appendDigit(key);
+      display.focus();
+      return;
+    }
+  
+    if ('+-/*'.includes(key)) {
+      calculator.setOperator(key);
+      display.focus();
+      return;
+    }
+  
+    switch (key) {
+      case 'Enter':
+      case '=':
+        calculator.evaluate();
+        display.focus();
+        break;
+      case '.':
+        calculator.appendDot();
+        display.focus();
+        break;
+      case 'Backspace':
+        calculator.backspace();
+        display.focus();
+        break;
+      case 'Delete':
+      case 'Escape':
+        calculator.clear();
+        display.focus();
+        break;
+      case '%':
+        calculator.percent();
+        display.focus();
+        break;
+    }
   };
 
   this.clear = function() {
