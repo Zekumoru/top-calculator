@@ -6,27 +6,12 @@ const currentOperandDisplay = {
 };
 
 const scrollableDisplay = new ScrollableDisplay(document.querySelector('.scrollable-display'));
-const calculator = new Calculator(
-  display,
-  document.querySelector('.display.main .operator')
-);
-
-calculator.onChangeActive = (active) => {
-  currentOperandDisplay.left.classList.toggle('active');
-  currentOperandDisplay.right.classList.toggle('active');
-}
-
-calculator.onEvaluated = (operator, leftOperand, rightOperand) => {
-  scrollableDisplay.addEntry(`${+leftOperand.toFixed(10)} ${operator} ${+rightOperand.toFixed(10)}`, '');
-};
-
-calculator.onNewInput = (display, operator) => {
-  scrollableDisplay.addEntry(display, '=');
-};
-
-calculator.onClear = () => {
-  scrollableDisplay.clear();
-};
+const calculator = new ClassicCalculator({
+  _display: display,
+  _operatorDisplay: document.querySelector('.display.main .operator'),
+  _scrollableDisplay: scrollableDisplay,
+  _currentOperandDisplay: currentOperandDisplay
+});
 
 document.querySelectorAll('button.digit').forEach((digit) => {
   digit.addEventListener('click', (e) => {
@@ -86,14 +71,11 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
-function Operand(name, value) {
-  this.name = name;
-  this.value = value;
-}
-
-function Calculator(_display, _operatorDisplay) {
+function ClassicCalculator({_display, _operatorDisplay, _scrollableDisplay, _currentOperandDisplay}) {
   const display = _display;
   const operatorDisplay = _operatorDisplay;
+  const scrollableDisplay = _scrollableDisplay;
+  const currentOperandDisplay = _currentOperandDisplay;
   const leftOperand = new Operand('left', 0);
   const rightOperand = new Operand('right', 0);
   let operator = null;
@@ -101,10 +83,22 @@ function Calculator(_display, _operatorDisplay) {
   let evaluated = false;
   let active = leftOperand;
 
-  this.onChangeActive;
-  this.onEvaluated;
-  this.onNewInput;
-  this.onClear;
+  this.onChangeActive = function (active) {
+    currentOperandDisplay.left.classList.toggle('active');
+    currentOperandDisplay.right.classList.toggle('active');
+  };
+
+  this.onEvaluated = function(operator, leftOperand, rightOperand) {
+    scrollableDisplay.addEntry(`${+leftOperand.toFixed(10)} ${operator} ${+rightOperand.toFixed(10)}`, '');
+  };
+
+  this.onNewInput = function(display, operator) {
+    scrollableDisplay.addEntry(display, '=');
+  };
+
+  this.onClear = function() {
+    scrollableDisplay.clear();
+  };
 
   this.clear = function() {
     leftOperand.value = 0;
@@ -239,6 +233,11 @@ function Calculator(_display, _operatorDisplay) {
       display: display.value
     };
   };
+
+  function Operand(name, value) {
+    this.name = name;
+    this.value = value;
+  }
 
   function add(a, b) {
     return a + b;
