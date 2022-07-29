@@ -1,18 +1,17 @@
 
-const display = document.querySelector('.display.main input');
-const currentOperandDisplay = {
-  element: document.querySelector('.current-operand'),
-  left: document.querySelector('.current-operand div.left'),
-  right: document.querySelector('.current-operand div.right')
+const displays = {
+  main: document.querySelector('.display.main input'),
+  scroll: new ScrollableDisplay(document.querySelector('.scrollable-display')),
+  result: document.querySelector('.display.main .operator'),
+  currentOperand: {
+    element: document.querySelector('.current-operand'),
+    left: document.querySelector('.current-operand div.left'),
+    right: document.querySelector('.current-operand div.right')
+  }
 };
+displays.operator = displays.result;
 
-const scrollableDisplay = new ScrollableDisplay(document.querySelector('.scrollable-display'));
-const calculator = new ClassicCalculator({
-  _display: display,
-  _operatorDisplay: document.querySelector('.display.main .operator'),
-  _scrollableDisplay: scrollableDisplay,
-  _currentOperandDisplay: currentOperandDisplay
-});
+const calculator = new ClassicCalculator(displays);
 
 document.querySelectorAll('button.digit').forEach((digit) => {
   digit.addEventListener('click', (e) => {
@@ -37,11 +36,11 @@ window.addEventListener('keydown', (e) => {
   calculator.handleKeyDown(e.key);
 });
 
-function ClassicCalculator({_display, _operatorDisplay, _scrollableDisplay, _currentOperandDisplay}) {
-  const display = _display;
-  const operatorDisplay = _operatorDisplay;
-  const scrollableDisplay = _scrollableDisplay;
-  const currentOperandDisplay = _currentOperandDisplay;
+function ClassicCalculator(displays) {
+  const display = displays.main;
+  const operatorDisplay = displays.operator;
+  const scrollableDisplay = displays.scroll;
+  const currentOperandDisplay = displays.currentOperand;
   const leftOperand = new Operand('left', 0);
   const rightOperand = new Operand('right', 0);
   let operator = null;
