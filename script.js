@@ -207,6 +207,7 @@ function Calculator(_display, _operatorDisplay) {
   this.resolveActive = function(fn) {
     if (evaluated) {
       this.setActive(leftOperand);
+      startRightOperand = false;
       evaluated = false;
       operator = null;
       this.updateOperatorDisplay('');
