@@ -90,8 +90,9 @@ function ClassicCalculator(displays) {
   let active = leftOperand;
 
   this.onChangeActive = function (active) {
-    currentOperandDisplay.left.classList.toggle('active');
-    currentOperandDisplay.right.classList.toggle('active');
+    currentOperandDisplay.left.classList.remove('active');
+    currentOperandDisplay.right.classList.remove('active');
+    currentOperandDisplay[active.name].classList.add('active');
   };
 
   this.onEvaluated = function(operator, leftOperand, rightOperand) {
