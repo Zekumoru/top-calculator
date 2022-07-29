@@ -21,6 +21,7 @@ const advanceButton = document.querySelector('button.advance');
 classicButton.addEventListener('click', (e) => {
   if (calculatorInUse === classicCalculator) return;
 
+  calculatorInUse.clear();
   calculatorInUse = classicCalculator;
   classicButton.classList.add('selected');
   advanceButton.classList.remove('selected');
@@ -29,6 +30,7 @@ classicButton.addEventListener('click', (e) => {
 advanceButton.addEventListener('click', (e) => {
   if (calculatorInUse === advanceCalculator) return;
 
+  calculatorInUse.clear();
   calculatorInUse = advanceCalculator;
   classicButton.classList.remove('selected');
   advanceButton.classList.add('selected');
@@ -61,6 +63,18 @@ function AdvanceCalculator({main, scroll, result}) {
   const display = main;
   const scrollableDisplay = scroll;
   const resultDisplay = result;
+
+  this.handleKeyDown = function(key) {};
+  this.clear = function() {};
+
+  this.digit = function() {};
+  this.operator = function() {};
+  this.enter = function() {};
+  this.dot = function() {};
+  this.backspace = function() {};
+  this.clear = function() {};
+  this.percent = function() {};
+  this.negate = function() {};
 }
 
 function ClassicCalculator(displays) {
