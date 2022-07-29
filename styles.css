@@ -166,6 +166,22 @@ button {
   gap: 8px;
 }
 
+.current-operand {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.current-operand div {
+  color: var(--border-color);
+  font-size: 12px;
+}
+
+.current-operand div.active {
+  color: var(--text-secondary-color);
+}
+
 button.zero {
   flex: 1;
 }
