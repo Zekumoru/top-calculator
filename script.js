@@ -1,7 +1,8 @@
 
+const display = document.querySelector('.display.main input');
 const scrollableDisplay = new ScrollableDisplay(document.querySelector('.scrollable-display'));
 const calculator = new Calculator(
-  document.querySelector('.display.main input'), 
+  display,
   document.querySelector('.display.main .operator')
 );
 
@@ -90,6 +91,7 @@ function Calculator(_display, _operatorDisplay) {
   let evaluated = false;
   let active = leftOperand;
 
+  this.onChangeActive;
   this.onEvaluated;
   this.onNewInput;
   this.onClear;
@@ -100,7 +102,7 @@ function Calculator(_display, _operatorDisplay) {
     operator = null;
     startRightOperand = false;
     evaluated = false;
-    active = leftOperand;
+    this.setActive(leftOperand);
     this.updateDisplay('0');
     this.updateOperatorDisplay('');
     if (typeof this.onClear === 'function') this.onClear();
@@ -132,7 +134,7 @@ function Calculator(_display, _operatorDisplay) {
 
     if (active === leftOperand || evaluated) {
       rightOperand.value = leftOperand.value;
-      active = rightOperand;
+      this.setActive(rightOperand);
       evaluated = false;
       startRightOperand = true;
     }
@@ -187,9 +189,14 @@ function Calculator(_display, _operatorDisplay) {
     this.updateDisplay(active.value);
   };
 
+  this.setActive = function(operand) {
+    active = operand;
+    if (typeof this.onChangeActive === 'function') this.onChangeActive(active);
+  }
+
   this.resolveActive = function(fn) {
     if (evaluated) {
-      active = leftOperand;
+      this.setActive(leftOperand);
       evaluated = false;
       operator = null;
       this.updateOperatorDisplay('');
