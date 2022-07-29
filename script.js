@@ -4,12 +4,15 @@ const displays = {
   scroll: new ScrollableDisplay(document.querySelector('.scrollable-display')),
   result: document.querySelector('.display.main .operator'),
   currentOperand: {
-    element: document.querySelector('.current-operand'),
+    element: document.querySelector('div.current-operand'),
     left: document.querySelector('.current-operand div.left'),
     right: document.querySelector('.current-operand div.right')
   }
 };
 displays.operator = displays.result;
+
+const classicPlaceHolderText = displays.main.placeholder;
+const advancePlaceHolderText = 'Parenthesis (), factorial !, and exponents ^ are supported here!';
 
 const classicCalculator = new ClassicCalculator(displays);
 const advanceCalculator = new AdvanceCalculator(displays);
@@ -18,22 +21,39 @@ let calculatorInUse = classicCalculator;
 const classicButton = document.querySelector('button.classic');
 const advanceButton = document.querySelector('button.advance');
 
+const swapCalculator = function({calculator, readOnly, placeholder, display, fromButton, toButton}) {
+  calculatorInUse.clear();
+  calculatorInUse = calculator;
+  displays.main.readOnly = readOnly;
+  displays.main.placeholder = placeholder;
+  displays.currentOperand.element.style.display = display;
+  fromButton.classList.remove('selected');
+  toButton.classList.add('selected');
+  displays.main.focus();
+};
+
 classicButton.addEventListener('click', (e) => {
   if (calculatorInUse === classicCalculator) return;
-
-  calculatorInUse.clear();
-  calculatorInUse = classicCalculator;
-  classicButton.classList.add('selected');
-  advanceButton.classList.remove('selected');
+  swapCalculator({
+    calculator: classicCalculator,
+    readOnly: true,
+    placeholder: classicPlaceHolderText,
+    display: 'flex',
+    fromButton: classicButton,
+    toButton: advanceButton
+  });
 });
 
 advanceButton.addEventListener('click', (e) => {
   if (calculatorInUse === advanceCalculator) return;
-
-  calculatorInUse.clear();
-  calculatorInUse = advanceCalculator;
-  classicButton.classList.remove('selected');
-  advanceButton.classList.add('selected');
+  swapCalculator({
+    calculator: advanceCalculator,
+    readOnly: false,
+    placeholder: advancePlaceHolderText,
+    display: 'none',
+    fromButton: advanceButton,
+    toButton: classicButton
+  });
 });
 
 document.querySelectorAll('button.digit').forEach((digit) => {
@@ -153,7 +173,7 @@ function ClassicCalculator(displays) {
     startRightOperand = false;
     evaluated = false;
     this.setActive(leftOperand);
-    this.updateDisplay('0');
+    this.updateDisplay('');
     this.updateOperatorDisplay('');
     if (typeof this.onClear === 'function') this.onClear();
   };
