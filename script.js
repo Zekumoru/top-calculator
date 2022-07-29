@@ -1,6 +1,7 @@
 
 const display = document.querySelector('.display.main input');
 const currentOperandDisplay = {
+  element: document.querySelector('.current-operand'),
   left: document.querySelector('.current-operand div.left'),
   right: document.querySelector('.current-operand div.right')
 };
