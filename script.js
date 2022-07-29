@@ -73,7 +73,7 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
-function Input(name, value) {
+function Operand(name, value) {
   this.name = name;
   this.value = value;
 }
@@ -81,24 +81,24 @@ function Input(name, value) {
 function Calculator(_display, _operatorDisplay) {
   const display = _display;
   const operatorDisplay = _operatorDisplay;
-  const firstInput = new Input('first', 0);
-  const secondInput = new Input('second', 0);
+  const leftOperand = new Operand('left', 0);
+  const rightOperand = new Operand('right', 0);
   let operator = null;
-  let startSecondInput = false;
+  let startRightOperand = false;
   let evaluated = false;
-  let active = firstInput;
+  let active = leftOperand;
 
   this.onEvaluated;
   this.onNewInput;
   this.onClear;
 
   this.clear = function() {
-    firstInput.value = 0;
-    secondInput.value = 0;
+    leftOperand.value = 0;
+    rightOperand.value = 0;
     operator = null;
-    startSecondInput = false;
+    startRightOperand = false;
     evaluated = false;
-    active = firstInput;
+    active = leftOperand;
     this.updateDisplay('0');
     this.updateOperatorDisplay('');
     if (typeof this.onClear === 'function') this.onClear();
@@ -106,14 +106,14 @@ function Calculator(_display, _operatorDisplay) {
 
   this.appendDigit = function(digit) {let reset = false;
     this.resolveActive(() => {
-      startSecondInput = true
+      startRightOperand = true
       reset = true;
     });
 
-    if (display.value === '0' || (operator && startSecondInput) || evaluated || reset) {
+    if (display.value === '0' || (operator && startRightOperand) || evaluated || reset) {
       this.updateDisplay(digit);
       evaluated = false;
-      startSecondInput = false;
+      startRightOperand = false;
     }
     else {
       this.appendToDisplay(digit);
@@ -123,38 +123,38 @@ function Calculator(_display, _operatorDisplay) {
   };
 
   this.setOperator = function(op) {
-    if (!evaluated && !startSecondInput) this.evaluate();
+    if (!evaluated && !startRightOperand) this.evaluate();
 
     operator = op;
     this.updateOperatorDisplay(op);
 
-    if (active === firstInput || evaluated) {
-      secondInput.value = firstInput.value;
-      active = secondInput;
+    if (active === leftOperand || evaluated) {
+      rightOperand.value = leftOperand.value;
+      active = rightOperand;
       evaluated = false;
-      startSecondInput = true;
+      startRightOperand = true;
     }
   };
 
   this.evaluate = function() {
     if (display.value.slice(-1) === '.') this.updateDisplay(+display.value);
-    if (active === firstInput) return;
+    if (active === leftOperand) return;
     
-    const result = operate(operator, firstInput.value, secondInput.value);
-    const previousFirstValue = firstInput.value;
-    firstInput.value = result;
+    const result = operate(operator, leftOperand.value, rightOperand.value);
+    const previousFirstValue = leftOperand.value;
+    leftOperand.value = result;
     this.updateDisplay(result);
     this.updateOperatorDisplay('=');
     evaluated = true;
-    if (typeof this.onEvaluated === 'function') this.onEvaluated(operator, previousFirstValue, secondInput.value, result);
+    if (typeof this.onEvaluated === 'function') this.onEvaluated(operator, previousFirstValue, rightOperand.value, result);
   };
 
   this.appendDot = function() {
     if (display.value.includes('.')) return;
-    if (!evaluated && startSecondInput) {
+    if (!evaluated && startRightOperand) {
       this.updateDisplay('0.');
       active.value = 0;
-      startSecondInput = false;
+      startRightOperand = false;
       return;
     }
 
@@ -187,7 +187,7 @@ function Calculator(_display, _operatorDisplay) {
 
   this.resolveActive = function(fn) {
     if (evaluated) {
-      active = firstInput;
+      active = leftOperand;
       evaluated = false;
       operator = null;
       this.updateOperatorDisplay('');
@@ -210,10 +210,10 @@ function Calculator(_display, _operatorDisplay) {
 
   this.expose = function() {
     return {
-      firstInput,
-      secondInput,
+      leftOperand,
+      rightOperand,
       active,
-      startSecondInput,
+      startRightOperand,
       evaluated,
       operator,
       display: display.value
