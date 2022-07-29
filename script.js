@@ -1,7 +1,9 @@
 
-const display = document.querySelector('.display.main input');
 const scrollableDisplay = new ScrollableDisplay(document.querySelector('.scrollable-display'));
-const calculator = new Calculator(display, document.querySelector('.display.main .result'));
+const calculator = new Calculator(
+  document.querySelector('.display.main input'), 
+  document.querySelector('.display.main .operator')
+);
 
 calculator.onEvaluated = (operator, leftOperand, rightOperand) => {
   scrollableDisplay.addEntry(`${+leftOperand.toFixed(10)} ${operator} ${+rightOperand.toFixed(10)}`, '');
