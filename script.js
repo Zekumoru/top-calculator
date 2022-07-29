@@ -158,7 +158,8 @@ function ClassicCalculator(displays) {
     if (typeof this.onClear === 'function') this.onClear();
   };
 
-  this.digit = function(digit) {let reset = false;
+  this.digit = function(digit) {
+    let reset = false;
     this.resolveActive(() => {
       startRightOperand = true
       reset = true;
