@@ -79,22 +79,35 @@ window.addEventListener('keydown', (e) => {
   calculatorInUse.handleKeyDown(e.key);
 });
 
-function AdvanceCalculator({main, scroll, result}) {
+function AdvanceCalculator({main, scroll, result, clear}) {
   const display = main;
   const scrollableDisplay = scroll;
   const resultDisplay = result;
 
-  this.handleKeyDown = function(key) {};
+  this.handleKeyDown = function(key) {
+    display.focus();
+  };
+  
   this.clear = function() {};
 
-  this.digit = function() {};
-  this.operator = function() {};
+  this.digit = (digit) => this.appendToDisplay(digit);
+  this.operator = (op) => this.appendToDisplay(op);
+  this.dot = () => this.appendToDisplay('.');
+  this.percent = () => this.appendToDisplay('%');
+  
   this.enter = function() {};
-  this.dot = function() {};
-  this.backspace = function() {};
-  this.clear = function() {};
-  this.percent = function() {};
   this.negate = function() {};
+  this.backspace = function() {
+    this.updateDisplay(display.value.slice(0, -1));
+  };
+
+  this.updateDisplay = function(string) {
+    display.value = string;
+  };
+  
+  this.appendToDisplay = function(string) {
+    this.updateDisplay(display.value + string);
+  };
 }
 
 function ClassicCalculator(displays) {
