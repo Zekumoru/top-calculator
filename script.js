@@ -11,30 +11,57 @@ const displays = {
 };
 displays.operator = displays.result;
 
-const calculator = new ClassicCalculator(displays);
+const classicCalculator = new ClassicCalculator(displays);
+const advanceCalculator = new AdvanceCalculator(displays);
+
+let calculatorInUse = classicCalculator;
+const classicButton = document.querySelector('button.classic');
+const advanceButton = document.querySelector('button.advance');
+
+classicButton.addEventListener('click', (e) => {
+  if (calculatorInUse === classicCalculator) return;
+
+  calculatorInUse = classicCalculator;
+  classicButton.classList.add('selected');
+  advanceButton.classList.remove('selected');
+});
+
+advanceButton.addEventListener('click', (e) => {
+  if (calculatorInUse === advanceCalculator) return;
+
+  calculatorInUse = advanceCalculator;
+  classicButton.classList.remove('selected');
+  advanceButton.classList.add('selected');
+});
 
 document.querySelectorAll('button.digit').forEach((digit) => {
   digit.addEventListener('click', (e) => {
-    calculator.digit(digit.textContent);
+    calculatorInUse.digit(digit.textContent);
   });
 });
 
 document.querySelectorAll('button.arithmetic').forEach((arithmetic) => {
   arithmetic.addEventListener('click', (e) => {
-    calculator.operator(arithmetic.textContent);
+    calculatorInUse.operator(arithmetic.textContent);
   });
 });
 
-document.querySelector('button.enter').addEventListener('click', (e) => calculator.enter());
-document.querySelector('button.dot').addEventListener('click', (e) => calculator.dot());
-document.querySelector('button.backspace').addEventListener('click', (e) => calculator.backspace());
-document.querySelector('button.clear').addEventListener('click', (e) => calculator.clear());
-document.querySelector('button.percent').addEventListener('click', (e) => calculator.percent());
-document.querySelector('button.negate').addEventListener('click', (e) => calculator.negate());
+document.querySelector('button.enter').addEventListener('click', (e) => calculatorInUse.enter());
+document.querySelector('button.dot').addEventListener('click', (e) => calculatorInUse.dot());
+document.querySelector('button.backspace').addEventListener('click', (e) => calculatorInUse.backspace());
+document.querySelector('button.clear').addEventListener('click', (e) => calculatorInUse.clear());
+document.querySelector('button.percent').addEventListener('click', (e) => calculatorInUse.percent());
+document.querySelector('button.negate').addEventListener('click', (e) => calculatorInUse.negate());
 
 window.addEventListener('keydown', (e) => {
-  calculator.handleKeyDown(e.key);
+  calculatorInUse.handleKeyDown(e.key);
 });
+
+function AdvanceCalculator({main, scroll, result}) {
+  const display = main;
+  const scrollableDisplay = scroll;
+  const resultDisplay = result;
+}
 
 function ClassicCalculator(displays) {
   const display = displays.main;
@@ -67,13 +94,13 @@ function ClassicCalculator(displays) {
 
   this.handleKeyDown = function(key) {
     if (!isNaN(key)) {
-      calculator.digit(key);
+      calculatorInUse.digit(key);
       display.focus();
       return;
     }
   
     if ('+-/*'.includes(key)) {
-      calculator.operator(key);
+      calculatorInUse.operator(key);
       display.focus();
       return;
     }
@@ -81,24 +108,24 @@ function ClassicCalculator(displays) {
     switch (key) {
       case 'Enter':
       case '=':
-        calculator.evaluate();
+        calculatorInUse.evaluate();
         display.focus();
         break;
       case '.':
-        calculator.dot();
+        calculatorInUse.dot();
         display.focus();
         break;
       case 'Backspace':
-        calculator.backspace();
+        calculatorInUse.backspace();
         display.focus();
         break;
       case 'Delete':
       case 'Escape':
-        calculator.clear();
+        calculatorInUse.clear();
         display.focus();
         break;
       case '%':
-        calculator.percent();
+        calculatorInUse.percent();
         display.focus();
         break;
     }
