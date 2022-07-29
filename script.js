@@ -1,10 +1,20 @@
 
 const display = document.querySelector('.display.main input');
+const currentOperandDisplay = {
+  left: document.querySelector('.current-operand div.left'),
+  right: document.querySelector('.current-operand div.right')
+};
+
 const scrollableDisplay = new ScrollableDisplay(document.querySelector('.scrollable-display'));
 const calculator = new Calculator(
   display,
   document.querySelector('.display.main .operator')
 );
+
+calculator.onChangeActive = (active) => {
+  currentOperandDisplay.left.classList.toggle('active');
+  currentOperandDisplay.right.classList.toggle('active');
+}
 
 calculator.onEvaluated = (operator, leftOperand, rightOperand) => {
   scrollableDisplay.addEntry(`${+leftOperand.toFixed(10)} ${operator} ${+rightOperand.toFixed(10)}`, '');
