@@ -15,22 +15,22 @@ const calculator = new ClassicCalculator({
 
 document.querySelectorAll('button.digit').forEach((digit) => {
   digit.addEventListener('click', (e) => {
-    calculator.handleKeyDown(digit.textContent);
+    calculator.digit(digit.textContent);
   });
 });
 
 document.querySelectorAll('button.arithmetic').forEach((arithmetic) => {
   arithmetic.addEventListener('click', (e) => {
-    calculator.handleKeyDown(arithmetic.textContent);
+    calculator.operator(arithmetic.textContent);
   });
 });
 
-document.querySelector('button.enter').addEventListener('click', (e) => calculator.handleKeyDown(e.target.textContent));
-document.querySelector('button.dot').addEventListener('click', (e) => calculator.handleKeyDown(e.target.textContent));
-document.querySelector('button.backspace').addEventListener('click', (e) => calculator.handleKeyDown(e.target.textContent));
-document.querySelector('button.clear').addEventListener('click', (e) => calculator.handleKeyDown(e.target.textContent));
-document.querySelector('button.percent').addEventListener('click', (e) => calculator.handleKeyDown(e.target.textContent));
-document.querySelector('button.negate').addEventListener('click', (e) => calculator.handleKeyDown(e.target.textContent));
+document.querySelector('button.enter').addEventListener('click', (e) => calculator.enter());
+document.querySelector('button.dot').addEventListener('click', (e) => calculator.dot());
+document.querySelector('button.backspace').addEventListener('click', (e) => calculator.backspace());
+document.querySelector('button.clear').addEventListener('click', (e) => calculator.clear());
+document.querySelector('button.percent').addEventListener('click', (e) => calculator.percent());
+document.querySelector('button.negate').addEventListener('click', (e) => calculator.negate());
 
 window.addEventListener('keydown', (e) => {
   calculator.handleKeyDown(e.key);
@@ -67,13 +67,13 @@ function ClassicCalculator({_display, _operatorDisplay, _scrollableDisplay, _cur
 
   this.handleKeyDown = function(key) {
     if (!isNaN(key)) {
-      calculator.appendDigit(key);
+      calculator.digit(key);
       display.focus();
       return;
     }
   
     if ('+-/*'.includes(key)) {
-      calculator.setOperator(key);
+      calculator.operator(key);
       display.focus();
       return;
     }
@@ -85,7 +85,7 @@ function ClassicCalculator({_display, _operatorDisplay, _scrollableDisplay, _cur
         display.focus();
         break;
       case '.':
-        calculator.appendDot();
+        calculator.dot();
         display.focus();
         break;
       case 'Backspace':
@@ -116,7 +116,7 @@ function ClassicCalculator({_display, _operatorDisplay, _scrollableDisplay, _cur
     if (typeof this.onClear === 'function') this.onClear();
   };
 
-  this.appendDigit = function(digit) {let reset = false;
+  this.digit = function(digit) {let reset = false;
     this.resolveActive(() => {
       startRightOperand = true
       reset = true;
@@ -134,7 +134,7 @@ function ClassicCalculator({_display, _operatorDisplay, _scrollableDisplay, _cur
     active.value = +display.value;
   };
 
-  this.setOperator = function(op) {
+  this.operator = function(op) {
     if (!evaluated && !startRightOperand) this.evaluate();
 
     operator = op;
@@ -146,6 +146,10 @@ function ClassicCalculator({_display, _operatorDisplay, _scrollableDisplay, _cur
       evaluated = false;
       startRightOperand = true;
     }
+  };
+
+  this.enter = function() {
+    this.evaluate();
   };
 
   this.evaluate = function() {
@@ -161,7 +165,7 @@ function ClassicCalculator({_display, _operatorDisplay, _scrollableDisplay, _cur
     if (typeof this.onEvaluated === 'function') this.onEvaluated(operator, previousFirstValue, rightOperand.value, result);
   };
 
-  this.appendDot = function() {
+  this.dot = function() {
     if (display.value.includes('.')) return;
     if (!evaluated && startRightOperand) {
       this.updateDisplay('0.');
