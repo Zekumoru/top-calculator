@@ -27,8 +27,8 @@ const swapCalculator = function({calculator, readOnly, placeholder, display, fro
   displays.main.readOnly = readOnly;
   displays.main.placeholder = placeholder;
   displays.currentOperand.element.style.display = display;
-  fromButton.classList.remove('selected');
-  toButton.classList.add('selected');
+  toButton.classList.remove('selected');
+  fromButton.classList.add('selected');
   displays.main.focus();
 };
 
