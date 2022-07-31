@@ -20,7 +20,7 @@ const advanceCalculator = new AdvanceCalculator(displays);
 let calculatorInUse = classicCalculator;
 const classicButton = document.querySelector('button.classic');
 const advanceButton = document.querySelector('button.advance');
-const percentButton = document.querySelector('button.percent');
+const classicPercentButton = document.querySelector('button.percent');
 const negateButton = document.querySelector('button.negate');
 const advanceOperators = document.querySelector('div.advance-operators');
 
@@ -32,12 +32,12 @@ const swapCalculator = function({calculator, readOnly, placeholder, display, sho
   displays.currentOperand.element.style.display = display;
   
   if (showAdvanceOperators) {
-    percentButton.style.display = 'none';
+    classicPercentButton.style.display = 'none';
     negateButton.style.display = 'none';
     advanceOperators.style.display = 'flex';
   }
   else {
-    percentButton.style.display = 'block';
+    classicPercentButton.style.display = 'block';
     negateButton.style.display = 'block';
     advanceOperators.style.display = 'none';
   }
@@ -94,8 +94,14 @@ document.querySelector('button.enter').addEventListener('mousedown', (e) => prev
 document.querySelector('button.dot').addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.dot()));
 document.querySelector('button.backspace').addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.backspace()));
 document.querySelector('button.clear').addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.clear()));
-percentButton.addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.percent()));
+classicPercentButton.addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.percent()));
 negateButton.addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.negate()));
+
+document.querySelector('button.left-paren').addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.leftParen()));
+document.querySelector('button.right-paren').addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.rightParen()));
+document.querySelector('.advance-operators button.percent').addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.percent()));
+document.querySelector('button.exponent').addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.exponent()));
+document.querySelector('button.factorial').addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.factorial()));
 
 window.addEventListener('keydown', (e) => {
   calculatorInUse.handleKeyDown(e.key);
@@ -121,9 +127,12 @@ function AdvanceCalculator({main, scroll, result, clear}) {
   this.operator = (op) => this.appendToDisplay(op);
   this.dot = () => this.appendToDisplay('.');
   this.percent = () => this.appendToDisplay('%');
-  
+  this.leftParen = () => this.appendToDisplay('(');
+  this.rightParen = () => this.appendToDisplay(')');
+  this.exponent = () => this.appendToDisplay('^');
+  this.factorial = () => this.appendToDisplay('!');
+
   this.enter = function() {};
-  this.negate = function() {};
   this.backspace = function() {
     this.updateDisplay(display.value.slice(0, -1));
   };
