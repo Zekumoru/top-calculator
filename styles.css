@@ -160,6 +160,16 @@ button {
   background-color: var(--primary-color);
 }
 
+.advance-operators {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+}
+
+.advance-operators .operator {
+  width: 20%;
+}
+
 .clear-ops {
   display: flex;
   flex-direction: column;
