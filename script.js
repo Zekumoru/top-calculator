@@ -20,13 +20,28 @@ const advanceCalculator = new AdvanceCalculator(displays);
 let calculatorInUse = classicCalculator;
 const classicButton = document.querySelector('button.classic');
 const advanceButton = document.querySelector('button.advance');
+const percentButton = document.querySelector('button.percent');
+const negateButton = document.querySelector('button.negate');
+const advanceOperators = document.querySelector('div.advance-operators');
 
-const swapCalculator = function({calculator, readOnly, placeholder, display, fromButton, toButton}) {
+const swapCalculator = function({calculator, readOnly, placeholder, display, showAdvanceOperators, fromButton, toButton}) {
   calculatorInUse.clear();
   calculatorInUse = calculator;
   displays.main.readOnly = readOnly;
   displays.main.placeholder = placeholder;
   displays.currentOperand.element.style.display = display;
+  
+  if (showAdvanceOperators) {
+    percentButton.style.display = 'none';
+    negateButton.style.display = 'none';
+    advanceOperators.style.display = 'flex';
+  }
+  else {
+    percentButton.style.display = 'block';
+    negateButton.style.display = 'block';
+    advanceOperators.style.display = 'none';
+  }
+
   toButton.classList.remove('selected');
   fromButton.classList.add('selected');
   displays.main.focus();
@@ -39,6 +54,7 @@ classicButton.addEventListener('click', (e) => {
     readOnly: true,
     placeholder: classicPlaceHolderText,
     display: 'flex',
+    showAdvanceOperators: false,
     fromButton: classicButton,
     toButton: advanceButton
   });
@@ -51,6 +67,7 @@ advanceButton.addEventListener('click', (e) => {
     readOnly: false,
     placeholder: advancePlaceHolderText,
     display: 'none',
+    showAdvanceOperators: true,
     fromButton: advanceButton,
     toButton: classicButton
   });
@@ -77,8 +94,8 @@ document.querySelector('button.enter').addEventListener('mousedown', (e) => prev
 document.querySelector('button.dot').addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.dot()));
 document.querySelector('button.backspace').addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.backspace()));
 document.querySelector('button.clear').addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.clear()));
-document.querySelector('button.percent').addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.percent()));
-document.querySelector('button.negate').addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.negate()));
+percentButton.addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.percent()));
+negateButton.addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.negate()));
 
 window.addEventListener('keydown', (e) => {
   calculatorInUse.handleKeyDown(e.key);

@@ -167,7 +167,7 @@ button {
 }
 
 .advance-operators .operator {
-  width: 20%;
+  width: auto;
 }
 
 .clear-ops {
