@@ -56,24 +56,29 @@ advanceButton.addEventListener('click', (e) => {
   });
 });
 
+const preventDefaultAndInvoke = function(e, fn) {
+  e.preventDefault();
+  fn();
+};
+
 document.querySelectorAll('button.digit').forEach((digit) => {
-  digit.addEventListener('click', (e) => {
-    calculatorInUse.digit(digit.textContent);
+  digit.addEventListener('mousedown', (e) => {
+    preventDefaultAndInvoke(e, () => calculatorInUse.digit(digit.textContent));
   });
 });
 
 document.querySelectorAll('button.arithmetic').forEach((arithmetic) => {
-  arithmetic.addEventListener('click', (e) => {
-    calculatorInUse.operator(arithmetic.textContent);
+  arithmetic.addEventListener('mousedown', (e) => {
+    preventDefaultAndInvoke(e, () => calculatorInUse.operator(arithmetic.textContent));
   });
 });
 
-document.querySelector('button.enter').addEventListener('click', (e) => calculatorInUse.enter());
-document.querySelector('button.dot').addEventListener('click', (e) => calculatorInUse.dot());
-document.querySelector('button.backspace').addEventListener('click', (e) => calculatorInUse.backspace());
-document.querySelector('button.clear').addEventListener('click', (e) => calculatorInUse.clear());
-document.querySelector('button.percent').addEventListener('click', (e) => calculatorInUse.percent());
-document.querySelector('button.negate').addEventListener('click', (e) => calculatorInUse.negate());
+document.querySelector('button.enter').addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.enter()));
+document.querySelector('button.dot').addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.dot()));
+document.querySelector('button.backspace').addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.backspace()));
+document.querySelector('button.clear').addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.clear()));
+document.querySelector('button.percent').addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.percent()));
+document.querySelector('button.negate').addEventListener('mousedown', (e) => preventDefaultAndInvoke(e, () => calculatorInUse.negate()));
 
 window.addEventListener('keydown', (e) => {
   calculatorInUse.handleKeyDown(e.key);
@@ -84,9 +89,7 @@ function AdvanceCalculator({main, scroll, result, clear}) {
   const scrollableDisplay = scroll;
   const resultDisplay = result;
 
-  this.handleKeyDown = function(key) {
-    display.focus();
-  };
+  this.handleKeyDown = function(key) { display.focus(); };
   
   this.clear = function() {};
 
