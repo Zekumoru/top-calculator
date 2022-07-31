@@ -84,6 +84,9 @@ window.addEventListener('keydown', (e) => {
   calculatorInUse.handleKeyDown(e.key);
 });
 
+// Automatically switch to advance calculator for testing purposes
+advanceButton.click();
+
 function AdvanceCalculator({main, scroll, result, clear}) {
   const display = main;
   const scrollableDisplay = scroll;
@@ -91,7 +94,11 @@ function AdvanceCalculator({main, scroll, result, clear}) {
 
   this.handleKeyDown = function(key) { display.focus(); };
   
-  this.clear = function() {};
+  this.clear = function() {
+    this.updateDisplay('');
+    resultDisplay.textContent = '';
+    scrollableDisplay.clear();
+  };
 
   this.digit = (digit) => this.appendToDisplay(digit);
   this.operator = (op) => this.appendToDisplay(op);
