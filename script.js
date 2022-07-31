@@ -125,24 +125,6 @@ function ClassicCalculator(displays) {
   let evaluated = false;
   let active = leftOperand;
 
-  this.onChangeActive = function (active) {
-    currentOperandDisplay.left.classList.remove('active');
-    currentOperandDisplay.right.classList.remove('active');
-    currentOperandDisplay[active.name].classList.add('active');
-  };
-
-  this.onEvaluated = function(operator, leftOperand, rightOperand) {
-    scrollableDisplay.addEntry(`${+leftOperand.toFixed(10)} ${operator} ${+rightOperand.toFixed(10)}`, '');
-  };
-
-  this.onNewInput = function(display, operator) {
-    scrollableDisplay.addEntry(display, '=');
-  };
-
-  this.onClear = function() {
-    scrollableDisplay.clear();
-  };
-
   this.handleKeyDown = function(key) {
     if (!isNaN(key)) {
       calculatorInUse.digit(key);
@@ -191,7 +173,7 @@ function ClassicCalculator(displays) {
     this.setActive(leftOperand);
     this.updateDisplay('');
     this.updateOperatorDisplay('');
-    if (typeof this.onClear === 'function') this.onClear();
+    scrollableDisplay.clear();
   };
 
   this.digit = function(digit) {
@@ -236,12 +218,12 @@ function ClassicCalculator(displays) {
     if (active === leftOperand) return;
     
     const result = operate(operator, leftOperand.value, rightOperand.value);
-    const previousFirstValue = leftOperand.value;
+    const previousLeftOperand = { ...leftOperand };
     leftOperand.value = result;
     this.updateDisplay(result);
     this.updateOperatorDisplay('=');
     evaluated = true;
-    if (typeof this.onEvaluated === 'function') this.onEvaluated(operator, previousFirstValue, rightOperand.value, result);
+    scrollableDisplay.addEntry(`${+previousLeftOperand.value.toFixed(10)} ${operator} ${+rightOperand.value.toFixed(10)}`, '');
   };
 
   this.dot = function() {
@@ -282,7 +264,9 @@ function ClassicCalculator(displays) {
 
   this.setActive = function(operand) {
     active = operand;
-    if (typeof this.onChangeActive === 'function') this.onChangeActive(active);
+    currentOperandDisplay.left.classList.remove('active');
+    currentOperandDisplay.right.classList.remove('active');
+    currentOperandDisplay[active.name].classList.add('active');
   }
 
   this.resolveActive = function(fn) {
@@ -292,7 +276,7 @@ function ClassicCalculator(displays) {
       evaluated = false;
       operator = null;
       this.updateOperatorDisplay('');
-      if (typeof this.onNewInput === 'function') this.onNewInput(display.value, operatorDisplay.textContent);
+      scrollableDisplay.addEntry(display.value, '=');
       if (typeof fn === 'function') fn();
     }
   };
