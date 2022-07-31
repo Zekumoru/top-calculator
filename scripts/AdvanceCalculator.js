@@ -34,3 +34,13 @@ export function AdvanceCalculator({main, scroll, result, clear}) {
     this.updateDisplay(display.value + string);
   };
 }
+
+export const RegexPatterns = {
+  spaces: /\s*/g,
+  calculatorLexemes: /\d+\.?\d*|[+\-*\/]|./gi,
+};
+
+export function Lexer(source) {
+  this.source = source;
+  this.tokens = source.replace(RegexPatterns.spaces, '').match(RegexPatterns.calculatorLexemes);
+}
