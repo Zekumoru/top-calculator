@@ -9,7 +9,7 @@ export function AdvanceCalculator({main, scroll, result, clear}) {
   this.evaluate = function() {
     const lexer = new Lexer(main.value);
     const evaluator = new Evaluator(lexer.lexemes);
-    const result = evaluator.factor();
+    const result = evaluator.evaluate();
     console.log(lexer.lexemes);
     console.log(result);
     resultDisplay.textContent = result;
@@ -55,6 +55,8 @@ export const RegexPatterns = {
 export const LexemeType = {
   plus: '+',
   minus: '-',
+  asterisk: '*',
+  slash: '/',
 };
 
 export function Lexer(source) {
@@ -73,11 +75,36 @@ export function Evaluator(lexemes) {
     return this.lexemes[0];
   };
 
+  this.evaluate = function() {
+    return this.term();
+  };
+
   this.factor = function() {
     const a = this.advance();
     if (a === undefined) return NaN;
     if (a === LexemeType.plus) return this.factor();
     if (a === LexemeType.minus) return -this.factor();
     return +a;
+  };
+
+  this.term = function() {
+    let a = this.factor();
+    while (a !== NaN) {
+      const peeked = this.peek();
+      if (peeked === LexemeType.asterisk) {
+        this.advance();
+        const b = this.factor();
+        a = a * b;
+      }
+      else if (peeked === LexemeType.slash) {
+        this.advance();
+        const b = this.factor();
+        a = a / b;
+      }
+      else {
+        return +a;
+      }
+    }
+    return NaN;
   };
 }
