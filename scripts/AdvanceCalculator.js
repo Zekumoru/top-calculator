@@ -106,7 +106,7 @@ export function Evaluator(lexemes) {
       }
     }
     return NaN;
-  }
+  };
 
   this.gamma = function(z) {
     let g = 7;
@@ -129,7 +129,7 @@ export function Evaluator(lexemes) {
     
     let t = z + g + 0.5;
     return Math.sqrt(2 * Math.PI) * Math.pow(t, (z + 0.5)) * Math.exp(-t) * x;
-  }
+  };
 
   this.exponent = function() {
     let a = this.factorial();
@@ -145,7 +145,7 @@ export function Evaluator(lexemes) {
       }
     }
     return NaN;
-  }
+  };
 
   this.term = function() {
     let a = this.exponent();
