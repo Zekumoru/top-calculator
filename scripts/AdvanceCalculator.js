@@ -7,6 +7,8 @@ export function AdvanceCalculator({main, scroll, result, clear}) {
   this.handleKeyDown = function(key) { display.focus(); };
   
   this.evaluate = function() {
+    if (display.value === '') return; 
+    
     const lexer = new Lexer(main.value);
     const evaluator = new Evaluator(lexer.lexemes);
     const result = evaluator.evaluate();
