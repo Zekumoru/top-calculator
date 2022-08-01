@@ -4,16 +4,22 @@ export function AdvanceCalculator({main, scroll, result, clear}) {
   const scrollableDisplay = scroll;
   const resultDisplay = result;
 
-  this.handleKeyDown = function(key) { display.focus(); };
+  this.handleKeyDown = function(key) {
+    if (key === 'Escape' || key === 'Delete') {
+      this.clear();
+    }
+    display.focus();
+  };
   
   this.evaluate = function() {
-    if (display.value === '') return; 
+    if (display.value === '') {
+      resultDisplay.textContent = '';
+      return; 
+    }
 
     const lexer = new Lexer(main.value);
     const evaluator = new Evaluator(lexer.lexemes);
     const result = evaluator.evaluate();
-    console.log(lexer.lexemes);
-    console.log(result);
     resultDisplay.textContent = +result.toFixed(10);
   };
 
