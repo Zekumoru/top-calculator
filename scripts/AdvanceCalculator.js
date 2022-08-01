@@ -61,6 +61,7 @@ export const LexemeType = {
   slash: '/',
   caret: '^',
   exclamation: '!',
+  percent: '%',
 };
 
 export function Lexer(source) {
@@ -93,8 +94,23 @@ export function Evaluator(lexemes) {
     return +a;
   };
 
-  this.factorial = function() {
+  this.percent = function() {
     let a = this.factor();
+    while (a !== NaN) {
+      const peeked = this.peek();
+      if (peeked === LexemeType.percent) {
+        this.advance();
+        a = a / 100;
+      }
+      else {
+        return +a;
+      }
+    }
+    return NaN;
+  };
+
+  this.factorial = function() {
+    let a = this.percent();
     while (a !== NaN) {
       const peeked = this.peek();
       if (peeked === LexemeType.exclamation) {
