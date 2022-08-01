@@ -214,7 +214,14 @@ export function Evaluator(lexemes) {
         a = a / b;
       }
       else {
-        return +a;
+        const temp = [...this.lexemes];
+        const b = this.parenthesis();
+        if (isNaN(b)) {
+          this.lexemes = temp;
+          return +a;
+        }
+
+        a = a * b;
       }
     }
     return NaN;
