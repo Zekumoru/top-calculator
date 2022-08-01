@@ -78,6 +78,7 @@ advanceButton.addEventListener('click', (e) => {
 
 const preventDefaultAndInvoke = function(e, fn) {
   e.preventDefault();
+  displays.main.focus();
   fn();
 };
 
