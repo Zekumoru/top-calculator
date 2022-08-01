@@ -14,7 +14,7 @@ export function AdvanceCalculator({main, scroll, result, clear}) {
     const result = evaluator.evaluate();
     console.log(lexer.lexemes);
     console.log(result);
-    resultDisplay.textContent = result;
+    resultDisplay.textContent = +result.toFixed(10);
   };
 
   this.clear = function() {
@@ -60,6 +60,7 @@ export const LexemeType = {
   asterisk: '*',
   slash: '/',
   caret: '^',
+  exclamation: '!',
 };
 
 export function Lexer(source) {
@@ -90,13 +91,51 @@ export function Evaluator(lexemes) {
     return +a;
   };
 
-  this.exponent = function() {
+  this.factorial = function() {
     let a = this.factor();
+    while (a !== NaN) {
+      const peeked = this.peek();
+      if (peeked === LexemeType.exclamation) {
+        this.advance();
+        a = this.gamma(a);
+      }
+      else {
+        return +a;
+      }
+    }
+    return NaN;
+  }
+
+  this.gamma = function(z) {
+    let g = 7;
+    let C = [
+      0.99999999999980993, 
+      676.5203681218851,
+      -1259.1392167224028,
+      771.32342877765313, 
+      -176.61502916214059,
+      12.507343278686905,
+      -0.13857109526572012,
+      9.9843695780195716e-6,
+      1.5056327351493116e-7
+    ];
+    
+    let x = C[0];
+    for (let i = 1; i < g + 2; i++) {
+      x += C[i] / (z + i);
+    }
+    
+    let t = z + g + 0.5;
+    return Math.sqrt(2 * Math.PI) * Math.pow(t, (z + 0.5)) * Math.exp(-t) * x;
+  }
+
+  this.exponent = function() {
+    let a = this.factorial();
     while (a !== NaN) {
       const peeked = this.peek();
       if (peeked === LexemeType.caret) {
         this.advance();
-        const b = this.factor();
+        const b = this.factorial();
         a = a ** b;
       }
       else {
