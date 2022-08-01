@@ -117,6 +117,3 @@ window.addEventListener('keyup', (e) => {
     calculatorInUse.evaluate();
   }
 });
-
-// Automatically switch to advance calculator for testing purposes
-advanceButton.click();
