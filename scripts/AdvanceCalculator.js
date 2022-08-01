@@ -6,6 +6,15 @@ export function AdvanceCalculator({main, scroll, result, clear}) {
 
   this.handleKeyDown = function(key) { display.focus(); };
   
+  this.evaluate = function() {
+    const lexer = new Lexer(main.value);
+    const evaluator = new Evaluator(lexer.lexemes);
+    const result = evaluator.factor();
+    console.log(lexer.lexemes);
+    console.log(result);
+    resultDisplay.textContent = result;
+  };
+
   this.clear = function() {
     this.updateDisplay('');
     resultDisplay.textContent = '';
@@ -21,7 +30,10 @@ export function AdvanceCalculator({main, scroll, result, clear}) {
   this.exponent = () => this.appendToDisplay('^');
   this.factorial = () => this.appendToDisplay('!');
 
-  this.enter = function() {};
+  this.enter = function() {
+    this.evaluate();
+  };
+
   this.backspace = function() {
     this.updateDisplay(display.value.slice(0, -1));
   };
@@ -40,7 +52,32 @@ export const RegexPatterns = {
   calculatorLexemes: /\d+\.?\d*|[+\-*\/]|./gi,
 };
 
+export const LexemeType = {
+  plus: '+',
+  minus: '-',
+};
+
 export function Lexer(source) {
   this.source = source;
-  this.tokens = source.replace(RegexPatterns.spaces, '').match(RegexPatterns.calculatorLexemes);
+  this.lexemes = source.replace(RegexPatterns.spaces, '').match(RegexPatterns.calculatorLexemes);
+}
+
+export function Evaluator(lexemes) {
+  this.lexemes = lexemes ?? [];
+
+  this.advance = function() {
+    return this.lexemes.shift();
+  };
+
+  this.peek = function() {
+    return this.lexemes[0];
+  };
+
+  this.factor = function() {
+    const a = this.advance();
+    if (a === undefined) return NaN;
+    if (a === LexemeType.plus) return this.factor();
+    if (a === LexemeType.minus) return -this.factor();
+    return +a;
+  };
 }

@@ -110,5 +110,11 @@ window.addEventListener('keydown', (e) => {
   calculatorInUse.handleKeyDown(e.key);
 });
 
+window.addEventListener('keyup', (e) => {
+  if (calculatorInUse === advanceCalculator) {
+    calculatorInUse.evaluate();
+  }
+});
+
 // Automatically switch to advance calculator for testing purposes
 advanceButton.click();
