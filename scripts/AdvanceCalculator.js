@@ -8,7 +8,7 @@ export function AdvanceCalculator({main, scroll, result, clear}) {
   
   this.evaluate = function() {
     if (display.value === '') return; 
-    
+
     const lexer = new Lexer(main.value);
     const evaluator = new Evaluator(lexer.lexemes);
     const result = evaluator.evaluate();
@@ -59,6 +59,7 @@ export const LexemeType = {
   minus: '-',
   asterisk: '*',
   slash: '/',
+  caret: '^',
 };
 
 export function Lexer(source) {
@@ -89,18 +90,34 @@ export function Evaluator(lexemes) {
     return +a;
   };
 
-  this.term = function() {
+  this.exponent = function() {
     let a = this.factor();
+    while (a !== NaN) {
+      const peeked = this.peek();
+      if (peeked === LexemeType.caret) {
+        this.advance();
+        const b = this.factor();
+        a = a ** b;
+      }
+      else {
+        return +a;
+      }
+    }
+    return NaN;
+  }
+
+  this.term = function() {
+    let a = this.exponent();
     while (a !== NaN) {
       const peeked = this.peek();
       if (peeked === LexemeType.asterisk) {
         this.advance();
-        const b = this.factor();
+        const b = this.exponent();
         a = a * b;
       }
       else if (peeked === LexemeType.slash) {
         this.advance();
-        const b = this.factor();
+        const b = this.exponent();
         a = a / b;
       }
       else {
