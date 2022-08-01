@@ -89,7 +89,8 @@ export function Evaluator(lexemes) {
   };
 
   this.parenthesis = function() {
-    if (this.advance() !== LexemeType.leftParen) return NaN;
+    if (this.peek() !== LexemeType.leftParen) return NaN;
+    this.advance();
     let a = this.expression();
     if (this.advance() !== LexemeType.rightParen) return NaN;
 
@@ -125,8 +126,14 @@ export function Evaluator(lexemes) {
     const peeked = this.peek();
     if (peeked === undefined) return NaN;
     if (!isNaN(peeked)) return +this.advance();
-    if (peeked === LexemeType.plus) return this.factor();
-    if (peeked === LexemeType.minus) return -this.factor();
+    if (peeked === LexemeType.plus) {
+      this.advance();
+      return this.factor();
+    }
+    if (peeked === LexemeType.minus) {
+      this.advance();
+      return -this.factor();
+    }
     return this.parenthesis();
   };
 
