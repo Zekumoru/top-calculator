@@ -20,7 +20,14 @@ export function AdvanceCalculator({main, scroll, result, clear}) {
     const lexer = new Lexer(main.value);
     const evaluator = new Evaluator(lexer.lexemes);
     const result = evaluator.evaluate();
-    resultDisplay.textContent = +result.toFixed(10);
+
+    const prefix = '= ';
+    if (isNaN(result)) {
+      this.updateResultDisplay(prefix + 'invalid');
+    }
+    else {
+      this.updateResultDisplay(prefix + (+result.toFixed(10)));
+    }
   };
 
   this.clear = function() {
@@ -45,6 +52,10 @@ export function AdvanceCalculator({main, scroll, result, clear}) {
   this.backspace = function() {
     this.updateDisplay(display.value.slice(0, -1));
   };
+
+  this.updateResultDisplay = function(string) {
+    resultDisplay.textContent = string;
+  }
 
   this.updateDisplay = function(string) {
     display.value = string;
