@@ -94,9 +94,8 @@ export function Evaluator(lexemes) {
     return result;
   };
 
-  this.parenthesis = function() {
-    if (this.peek() !== LexemeType.leftParen) return NaN;
-    this.advance();
+  this.parenthesis = function(consumedLeftParen) {
+    if (!consumedLeftParen && this.advance() !== LexemeType.leftParen) return NaN;
     let a = this.expression();
     if (this.advance() !== LexemeType.rightParen) return NaN;
 
@@ -114,33 +113,16 @@ export function Evaluator(lexemes) {
       const b = this.factor();
       a = a ** b;
     }
-    else {
-      const temp = [...this.lexemes];
-      const b = this.factor();
-      if (!isNaN(b)) {
-        a = a * b;
-      }
-      else {
-        this.lexemes = temp;
-      }
-    }
-
     return a;
   }
 
   this.factor = function() {
-    const peeked = this.peek();
-    if (peeked === undefined) return NaN;
-    if (!isNaN(peeked)) return +this.advance();
-    if (peeked === LexemeType.plus) {
-      this.advance();
-      return this.factor();
-    }
-    if (peeked === LexemeType.minus) {
-      this.advance();
-      return -this.factor();
-    }
-    return this.parenthesis();
+    const a = this.advance();
+    if (a === undefined) return NaN;
+    if (a === LexemeType.plus) return +a;
+    if (a === LexemeType.minus) return -a;
+    if (a === LexemeType.leftParen) return this.parenthesis(true);
+    return +a;
   };
 
   this.percent = function() {
@@ -226,19 +208,16 @@ export function Evaluator(lexemes) {
         const b = this.exponent();
         a = a / b;
       }
+      else if (peeked === LexemeType.leftParen) {
+        const b = this.parenthesis(false);
+        a = a * b;
+      }
       else if (!isNaN(peeked)) {
         const b = this.exponent();
         a = a * b;
       }
       else {
-        const temp = [...this.lexemes];
-        const b = this.parenthesis();
-        if (isNaN(b)) {
-          this.lexemes = temp;
-          return +a;
-        }
-
-        a = a * b;
+        return +a;
       }
     }
     return NaN;
