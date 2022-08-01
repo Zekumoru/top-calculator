@@ -76,7 +76,7 @@ export function Evaluator(lexemes) {
   };
 
   this.evaluate = function() {
-    return this.term();
+    return this.expression();
   };
 
   this.factor = function() {
@@ -100,6 +100,27 @@ export function Evaluator(lexemes) {
         this.advance();
         const b = this.factor();
         a = a / b;
+      }
+      else {
+        return +a;
+      }
+    }
+    return NaN;
+  };
+
+  this.expression = function() {
+    let a = this.term();
+    while (a !== NaN) {
+      const peeked = this.peek();
+      if (peeked === LexemeType.plus) {
+        this.advance();
+        const b = this.term();
+        a = a + b;
+      }
+      else if (peeked === LexemeType.minus) {
+        this.advance();
+        const b = this.term();
+        a = a - b;
       }
       else {
         return +a;
