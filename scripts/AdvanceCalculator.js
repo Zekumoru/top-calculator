@@ -62,6 +62,8 @@ export const LexemeType = {
   caret: '^',
   exclamation: '!',
   percent: '%',
+  leftParen: '(',
+  rightParen: ')',
 };
 
 export function Lexer(source) {
@@ -86,12 +88,46 @@ export function Evaluator(lexemes) {
     return result;
   };
 
+  this.parenthesis = function() {
+    if (this.advance() !== LexemeType.leftParen) return NaN;
+    let a = this.expression();
+    if (this.advance() !== LexemeType.rightParen) return NaN;
+
+    const peeked = this.peek();
+    if (peeked === LexemeType.percent) {
+      this.advance();
+      a = a / 100;
+    }
+    else if (peeked === LexemeType.exclamation) {
+      this.advance();
+      a = this.gamma(a);
+    }
+    else if (peeked === LexemeType.caret) {
+      this.advance();
+      const b = this.factor();
+      a = a ** b;
+    }
+    else {
+      const temp = [...this.lexemes];
+      const b = this.factor();
+      if (!isNaN(b)) {
+        a = a * b;
+      }
+      else {
+        this.lexemes = temp;
+      }
+    }
+
+    return a;
+  }
+
   this.factor = function() {
-    const a = this.advance();
-    if (a === undefined) return NaN;
-    if (a === LexemeType.plus) return this.factor();
-    if (a === LexemeType.minus) return -this.factor();
-    return +a;
+    const peeked = this.peek();
+    if (peeked === undefined) return NaN;
+    if (!isNaN(peeked)) return +this.advance();
+    if (peeked === LexemeType.plus) return this.factor();
+    if (peeked === LexemeType.minus) return -this.factor();
+    return this.parenthesis();
   };
 
   this.percent = function() {
