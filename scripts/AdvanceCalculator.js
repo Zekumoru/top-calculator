@@ -213,6 +213,10 @@ export function Evaluator(lexemes) {
         const b = this.exponent();
         a = a / b;
       }
+      else if (!isNaN(peeked)) {
+        const b = this.exponent();
+        a = a * b;
+      }
       else {
         const temp = [...this.lexemes];
         const b = this.parenthesis();
