@@ -28,6 +28,8 @@ export function AdvanceCalculator({main, scroll, result, clear}) {
     else {
       this.updateResultDisplay(prefix + (+result.toFixed(10)));
     }
+
+    return result;
   };
 
   this.clear = function() {
@@ -46,7 +48,12 @@ export function AdvanceCalculator({main, scroll, result, clear}) {
   this.factorial = () => this.appendToDisplay('!');
 
   this.enter = function() {
-    this.evaluate();
+    const result = this.evaluate();
+    if (isNaN(result)) return;
+    
+    scrollableDisplay.addEntry(display.value, resultDisplay.textContent);
+    this.updateDisplay('');
+    this.updateResultDisplay('');
   };
 
   this.backspace = function() {

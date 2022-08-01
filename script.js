@@ -113,8 +113,13 @@ window.addEventListener('keydown', (e) => {
 
 const validKeys = [ 'Backspace', 'Delete', 'Escape' ];
 window.addEventListener('keyup', (e) => {
-  if (!(/[0-9\.\+\-\*\\\(\)\^\!\%]/.test(e.key) || validKeys.includes(e.key))) return;
   if (calculatorInUse === advanceCalculator) {
+    if (e.key === 'Enter') {
+      calculatorInUse.enter();
+      return;
+    }
+
+    if (!(/[0-9\.\+\-\*\\\(\)\^\!\%]/.test(e.key) || validKeys.includes(e.key))) return;
     calculatorInUse.evaluate();
   }
 });
