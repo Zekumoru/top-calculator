@@ -80,7 +80,9 @@ export function Evaluator(lexemes) {
   };
 
   this.evaluate = function() {
-    return this.expression();
+    const result = this.expression();
+    if (this.lexemes.length > 0) return NaN;
+    return result;
   };
 
   this.factor = function() {
