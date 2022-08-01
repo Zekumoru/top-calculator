@@ -110,7 +110,7 @@ window.addEventListener('keydown', (e) => {
   calculatorInUse.handleKeyDown(e.key);
 });
 
-const validKeys = [ 'Backspace', 'Delete', 'Escape' ];
+const validKeys = [ 'Enter', 'Backspace', 'Delete', 'Escape' ];
 window.addEventListener('keyup', (e) => {
   if (!(/[0-9\.\+\-\*\\\(\)\^\!\%]/.test(e.key) || validKeys.includes(e.key))) return;
   if (calculatorInUse === advanceCalculator) {
