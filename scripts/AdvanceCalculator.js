@@ -50,7 +50,7 @@ export function AdvanceCalculator({main, scroll, result, clear}) {
   this.enter = function() {
     const result = this.evaluate();
     if (isNaN(result)) return;
-    
+
     scrollableDisplay.addEntry(display.value, resultDisplay.textContent);
     this.updateDisplay('');
     this.updateResultDisplay('');
@@ -66,6 +66,7 @@ export function AdvanceCalculator({main, scroll, result, clear}) {
 
   this.updateDisplay = function(string) {
     display.value = string;
+    this.evaluate();
   };
   
   this.appendToDisplay = function(string) {
