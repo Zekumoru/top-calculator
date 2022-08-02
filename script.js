@@ -112,17 +112,15 @@ window.addEventListener('keydown', (e) => {
   calculatorInUse.handleKeyDown(e.key);
 });
 
-const validKeys = [ 'Backspace', 'Delete', 'Escape' ];
 window.addEventListener('keyup', (e) => {
-  if (calculatorInUse === advanceCalculator) {
-    if (e.key === 'Enter') {
-      calculatorInUse.enter();
-      return;
-    }
+  if (calculatorInUse !== advanceCalculator) return;
+  if (e.key !== 'Enter') return;
+  calculatorInUse.enter();
+});
 
-    if (!(/[0-9\.\+\-\*\\\(\)\^\!\%]/.test(e.key) || validKeys.includes(e.key))) return;
-    calculatorInUse.evaluate();
-  }
+displays.main.addEventListener('input', (e) => {
+  if (calculatorInUse !== advanceCalculator) return;
+  calculatorInUse.evaluate();
 });
 
 const updatePlaceHolderText = function() {
