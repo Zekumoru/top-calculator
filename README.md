@@ -1,4 +1,18 @@
 # Basic Calculator
+## Content
+[Description](#description)
+  - [Main Objective](#main-objective)
+  - [End Result](#end-result)
+
+[Skills Required](#skills-required)
+
+[Interesting Story](#interesting-story)
+
+[What I learned](#what-i-learned)
+  - [Classic Calculator](#classic-calculator)
+  - [Advance Calculator](#advance-calculator)
+  - [Recursive Descent Parser](#recursive-descent-parser)
+
 ## Description
 This is the fifth and [last project](https://www.theodinproject.com/lessons/foundations-calculator) of the Foundations course of The Odin Project.
 
