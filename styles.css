@@ -52,6 +52,7 @@ body {
 }
 
 .container {
+  background-color: var(--primary-color);
   border-left: 2px solid var(--border-color);
   border-right: 2px solid var(--border-color);
   border-bottom: 2px solid var(--border-color);
@@ -110,7 +111,6 @@ button {
   display: flex;
   padding: 8px;
   gap: 32px;
-  background-color: var(--primary-color);
 }
 
 .numbers {
