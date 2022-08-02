@@ -155,3 +155,7 @@ Obviously, we only defined three grammar rules which evaluate the four simple ma
 I didn't bother looking back at the articles/videos nor searching on how to implement parenthesis, factorial, exponent, and percent. I came up with the solutions on my own and here's the final grammar set for my recursive descent parser algorithm!
 
 ![All grammar rules on ZekuCalcu's calculator](./img/zeku-calcu-grammar.JPG "ZekuCalcu's grammar rules")
+
+And here's a sample parsed tree using the complete grammar:
+
+![A sample parsed expression tree](./img/sample-parsed-expression.JPG "Sample parsed expression")
