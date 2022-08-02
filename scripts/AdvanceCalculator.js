@@ -138,8 +138,8 @@ export function Evaluator(lexemes) {
   this.factor = function() {
     const a = this.advance();
     if (a === undefined) return NaN;
-    if (a === LexemeType.plus) return +a;
-    if (a === LexemeType.minus) return -a;
+    if (a === LexemeType.plus) return +this.factor();
+    if (a === LexemeType.minus) return -this.factor();
     if (a === LexemeType.leftParen) return this.parenthesis(true);
     return +a;
   };
