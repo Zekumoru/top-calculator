@@ -16,6 +16,9 @@ displays.operator = displays.result;
 
 const classicPlaceHolderText = displays.main.placeholder;
 const advancePlaceHolderText = 'Parenthesis (), factorial !, and exponents ^ are supported here!';
+const classicPlaceHolderTextSmall = 'Use advance to freely type!';
+const advancePlaceHolderTextSmall = '(), !, and ^ are supported here!';
+let currentPlaceHolderText = classicPlaceHolderText;
 
 const classicCalculator = new ClassicCalculator(displays);
 const advanceCalculator = new AdvanceCalculator(displays);
@@ -27,11 +30,11 @@ const classicPercentButton = document.querySelector('button.percent');
 const negateButton = document.querySelector('button.negate');
 const advanceOperators = document.querySelector('div.advance-operators');
 
-const swapCalculator = function({calculator, readOnly, placeholder, display, showAdvanceOperators, fromButton, toButton}) {
+const swapCalculator = function({calculator, readOnly, display, showAdvanceOperators, fromButton, toButton}) {
   calculatorInUse.clear();
   calculatorInUse = calculator;
   displays.main.readOnly = readOnly;
-  displays.main.placeholder = placeholder;
+  updatePlaceHolderText();
   displays.currentOperand.element.style.display = display;
   
   if (showAdvanceOperators) {
@@ -55,7 +58,6 @@ classicButton.addEventListener('click', (e) => {
   swapCalculator({
     calculator: classicCalculator,
     readOnly: true,
-    placeholder: classicPlaceHolderText,
     display: 'flex',
     showAdvanceOperators: false,
     fromButton: classicButton,
@@ -68,7 +70,6 @@ advanceButton.addEventListener('click', (e) => {
   swapCalculator({
     calculator: advanceCalculator,
     readOnly: false,
-    placeholder: advancePlaceHolderText,
     display: 'none',
     showAdvanceOperators: true,
     fromButton: advanceButton,
@@ -122,4 +123,30 @@ window.addEventListener('keyup', (e) => {
     if (!(/[0-9\.\+\-\*\\\(\)\^\!\%]/.test(e.key) || validKeys.includes(e.key))) return;
     calculatorInUse.evaluate();
   }
+});
+
+const updatePlaceHolderText = function() {
+  const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+  if (width > 768) {
+    if (calculatorInUse === classicCalculator) {
+      currentPlaceHolderText = classicPlaceHolderText;
+    }
+    else {
+      currentPlaceHolderText = advancePlaceHolderText;
+    }
+  }
+  else {
+    if (calculatorInUse === classicCalculator) {
+      currentPlaceHolderText = classicPlaceHolderTextSmall;
+    }
+    else {
+      currentPlaceHolderText = advancePlaceHolderTextSmall;
+    }
+  }
+  displays.main.placeholder = currentPlaceHolderText;
+};
+
+updatePlaceHolderText();
+window.addEventListener('resize', (e) => {
+  updatePlaceHolderText();
 });
