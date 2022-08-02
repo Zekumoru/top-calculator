@@ -270,4 +270,27 @@ button.enter:hover {
   .container {
     border: 0;
   }
+  
+  button {
+    padding: 12px 8px;
+  }
+
+  .inputs {
+    height: 180px;
+    gap: 12px;
+  }
+
+  .right .digit {
+    width: 25%;
+  }
+
+  .operators .operator {
+    width: 38%;
+  }
+
+  .advance-operators .operator {
+    width: auto;
+    padding: 12px 2px;
+    font-size: 8px;
+  }
 }
