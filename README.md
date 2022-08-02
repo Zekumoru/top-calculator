@@ -57,13 +57,15 @@ Basically, you define a set of grammars of what to do when you meet specific pat
 
 A [token](https://www.techtarget.com/whatis/definition/token#:~:text=A%20programming%20token%20is%20the,rules%20of%20the%20programming%20language.) is a basic component in a source code. Given a string of `-7 + 5/2.5 - 3*2`, we can divide them into these tokens: 
 
-`-`, `7`, `+`, `5`, `/`, `2.5`, `-`, `3`, `*`, `2` [IMAGE]()
+`-`, `7`, `+`, `5`, `/`, `2.5`, `-`, `3`, `*`, `2`
+
+[IMAGE](Use image instead for the above tokens)
 
 Notice how it basically divides the input into its most basic components, or tokens. This is called [Lexical Analysis](https://en.wikipedia.org/wiki/Lexical_analysis). 
 
 Now that you know what a token is, let's define the following grammars below:
 
-[IMAGE]()
+[IMAGE](Picture of the three basic grammars)
 
 The first one means a pattern of a `T` then zero or more of `+` or `-` followed by another `T`.
 
@@ -86,21 +88,21 @@ Let's start to the first token `-` and to the first grammar `E`:
 
 [IMAGE](step by step process of the above)
 
-The interesting part is what are we to do if we meet same precedence? Let's say we got to the second `-`, where do we put it in the tree? Well, obviously, we don't put it to the same `E` since it'll break the grammar rule for it. So where? Well, we put the entire `E` below another new `E`. Like so:
+The interesting part is _what are we to do if we meet same precedence_? Let's say we got to the second `-`, where do we put it in the tree? Well, obviously, we don't put it to the same `E` since it'll break the grammar rule for it. So where? Well, we put the entire `E` below another new `E`. Like so:
 
 [IMAGE](comparing the wrong solution and the right one)
 
-And the final tree will look like this:
+And finally, the final tree will look like this:
 
 [IMAGE](the final structure of the given expression)
 
-Though, that seems too convoluted... This is where [Abstract Syntax Tree (AST)](https://en.wikipedia.org/wiki/Abstract_syntax_tree) comes in. It basically means a simpler representation of the parse tree.
+Though, that seems too convoluted... This is where [Abstract Syntax Tree (AST)](https://en.wikipedia.org/wiki/Abstract_syntax_tree) comes in. It basically means a **simpler representation of the parse tree**.
 
 Let's remove all the grammar rules in the tree and we will have this elegant and easy-to-follow AST:
 
 [IMAGE](ast version of the final structure)
 
-Now, we only need to traverse this tree to evaluate our expression. While we were "consuming" tokens, that is the part where we create a [node](https://en.wikipedia.org/wiki/Node_(computer_science)) and append it to the tree so that we can traverse the tree afterward but I didn't make my solution this way, while we were consuming tokens, it's also already evaluating it and returning the result instead.
+Now, we only need to traverse this tree to evaluate our expression. While we were _"consuming"_ tokens, that is the part where we create a [node](https://en.wikipedia.org/wiki/Node_(computer_science)) and append it to the tree so that we can traverse the tree afterward but I didn't make my solution this way, while we were consuming tokens, it's also already evaluating it and returning the result instead.
 
 [IMAGE](screenshot of a code snippet showing the explanation above)
 
@@ -128,4 +130,10 @@ And that's how the recursive descent parsing algorithm I implemented work to eva
 > - [Grammars and Parsing](http://ccl.pku.edu.cn/doubtfire/nlp/parsing/introduction/grammars%20and%20parsing.htm) by Allen
 > - [Expression parser grammar and left-associativity](https://stackoverflow.com/questions/20318706/expression-parser-grammar-and-left-associativity) on StackOverflow
 >
-> What helped me a ton are the [Context-free grammar](https://en.wikipedia.org/wiki/Context-free_grammar) article, the three articles on Crafting Interpreters, [Recursive Descent Parsing](https://www.youtube.com/watch?v=SToUyjAsaFk&t=1435s) video by hhp3 and finally, the four videos from Nand2Tetris that actually made me understand it all. The icing on the cake!
+> What helped me a ton are the [Context-free grammar](https://en.wikipedia.org/wiki/Context-free_grammar) article, the **three articles on Crafting Interpreters**, [Recursive Descent Parsing](https://www.youtube.com/watch?v=SToUyjAsaFk&t=1435s) video by hhp3 and finally, **the four videos from Nand2Tetris** that actually made me understand it all. The icing on the cake!
+
+Obviously, we only defined three grammar rules which evaluate the four simple math operations. 
+
+I didn't bother looking back at the articles/videos nor searching on how to implement parenthesis, factorial, exponent, and percent. I came up with the solutions on my own and here's the final grammar set for my recursive descent parser algorithm!
+
+[IMAGE](all grammar rules on the evaluator)
