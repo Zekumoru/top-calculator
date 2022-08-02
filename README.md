@@ -20,6 +20,10 @@ This is the fifth and [last project](https://www.theodinproject.com/lessons/foun
 Build a basic calculator which implements the _add_, _subtract_, _multiply_, and _divide_ functionalities.
 
 ### End Result
+The UI of the finished calculator:
+
+![Showcasing UI](./img/ui-showcase.png "UI showcase")
+
 I built a calculator that adheres to the main objective and extended it to also support **negation** and **percent** (which divides the input by 100).
 
 I also extended it to add an **advance mode** that supports typing expressions freely which inevitably lead me to also support **parenthesis**, **factorial**, and **exponential**.
