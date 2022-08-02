@@ -108,6 +108,7 @@ button {
 }
 
 .inputs {
+  height: 180px;
   display: flex;
   padding: 8px;
   gap: 32px;
@@ -206,6 +207,7 @@ button.backspace {
 button.clear{
   border: none;
   flex: 1;
+  padding: 0;
   color: var(--text-secondary-color);
 }
 
@@ -277,7 +279,6 @@ button.enter:hover {
   }
 
   .inputs {
-    height: 180px;
     gap: 12px;
   }
 
