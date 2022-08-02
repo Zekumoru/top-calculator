@@ -82,6 +82,7 @@ body {
 }
 
 input[type=text] {
+  min-width: 0;
   flex: 1;
   height: 100%;
   outline: none;
