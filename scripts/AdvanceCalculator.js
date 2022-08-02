@@ -174,6 +174,10 @@ export function Evaluator(lexemes) {
     return NaN;
   };
 
+  /**
+   * Gamma formula to find factorial of decimal numbers
+   * Source: https://stackoverflow.com/a/15454784/12294437
+   */
   this.gamma = function(z) {
     let g = 7;
     let C = [
