@@ -57,15 +57,13 @@ Basically, you define a set of grammars of what to do when you meet specific pat
 
 A [token](https://www.techtarget.com/whatis/definition/token#:~:text=A%20programming%20token%20is%20the,rules%20of%20the%20programming%20language.) is a basic component in a source code. Given a string of `-7 + 5/2.5 - 3*2`, we can divide them into these tokens: 
 
-`-`, `7`, `+`, `5`, `/`, `2.5`, `-`, `3`, `*`, `2`
-
-[IMAGE](Use image instead for the above tokens)
+![Tokenizing the expression `-7 + 5/2.5 - 3*2`](./img/lexical-analysis.JPG "Tokenized: -7 + 5/2.5 - 3*2")
 
 Notice how it basically divides the input into its most basic components, or tokens. This is called [Lexical Analysis](https://en.wikipedia.org/wiki/Lexical_analysis). 
 
 Now that you know what a token is, let's define the following grammars below:
 
-[IMAGE](Picture of the three basic grammars)
+![Picture of the three basic grammars](./img/basic-grammar-rules.JPG "Three basic grammar rules")
 
 The first one means a pattern of a `T` then zero or more of `+` or `-` followed by another `T`.
 
@@ -75,36 +73,38 @@ Now, what's `F`? It's either a `-` or `+` followed by an `F`, or a number.
 
 Using the example above `-7 + 5/2.5 - 3*2`, let's use the grammars we defined to create a **parse tree** from it and a [parse tree](https://en.wikipedia.org/wiki/Parse_tree) is just the **structural representation of our expression** which the structure is derived from the grammars. This is what helps us _to determine which operation goes first_: multiple/divide first before adding and subtracting, evaluate same precedence from left-to-right, etc.
 
-Let's start to the first token `-` and to the first grammar `E`:
-- The first we meet is a `T` and that's another grammar rule so we go inside.
-- Inside `T`, we meet an `F` and again, another grammar rule so we go inside.
-- Inside `F`, we meet either a `-` or `+`: Is our token `-` matches any of these? Yes! So we consume this token and move to the next token `7`.
-- The `F` grammar rule is not finished yet, after either a `+` or `-`, we meet another `F`.
-- Inside this `F`, is our current token `7` the same as `+` or `-`? Nope! So we ignore the rest of that rule and move on to the next rule in `F` which is: Is `7` a number? Yes! So we consume this `7` and move on to the next token `+`.
-- Since there's nothing else after a number, we return. We also return again since there's nothing else after a `-` or `+` followed by an `F` since we've just evaluated that.
-- Back to `T`, after the `F`, we meet a `*` or `/`. Does that match our current `+` token? Nope! And since this is the optional zero or more occurrences of `{[*/] F}` and we didn't match the first criteria, we return.
-- Back to `E`, after the `T`, we meet either `+` or `-` and does that match our current token `+`? Why, of course! So we consume it and move on to the next token `5`.
+1. Let's start on the first token `-` and on the first grammar `E`:
+2. The first we meet is a `T` and that's another grammar rule so we go inside.
+3. Inside `T`, we meet an `F` and again, another grammar rule so we go inside.
+4. Inside `F`, we meet either a `-` or `+`: Is our token `-` matches any of these? Yes! So we consume this token and move to the next token `7`.
+5. The `F` grammar rule is not finished yet, after either a `+` or `-`, we meet another `F`.
+6. Inside this `F`, is our current token `7` the same as `+` or `-`? Nope! So we ignore the rest of that rule and move on to the next rule in `F` which is: Is `7` a number? Yes! So we consume this `7` and move on to the next token `+`.
+7. Since there's nothing else after a number, we return.
+8. We also return again since there's nothing else after a `-` or `+` followed by an `F` since we've just evaluated that.
+9. Back to `T`, after the `F`, we meet a `*` or `/`. Does that match our current `+` token? Nope! 
+10. And since this is the optional zero or more occurrences of `{[*/] F}` and we didn't match the first criteria, we return.
+11. Back to `E`, after the `T`, we meet either `+` or `-` and does that match our current token `+`? Why, of course! So we consume it and move on to the next token `5`.
 - The next rule after `+` or `-` is another `T` and we do the same story again until we consume all tokens.
 
-[IMAGE](step by step process of the above)
+![The process of the recursive descent parser](./img/recursive-descent-process.JPG "Recursive descent in action")
 
-The interesting part is _what are we to do if we meet same precedence_? Let's say we got to the second `-`, where do we put it in the tree? Well, obviously, we don't put it to the same `E` since it'll break the grammar rule for it. So where? Well, we put the entire `E` below another new `E`. Like so:
+The interesting part is _what are we to do if we meet same precedence_? Let's say we got to the second `-`, where do we put it in the tree? Well, obviously, we don't put it to the same `E` since it'll break the grammar rule for it. So where? Well, we put the entire `E` below another new `E`. This is called [left-associativity](https://en.wikipedia.org/wiki/Operator_associativity).
 
-[IMAGE](comparing the wrong solution and the right one)
+![Solution to left-associativity](./img/same-precedence-solution.JPG "Same precedence solution")
 
 And finally, the final tree will look like this:
 
-[IMAGE](the final structure of the given expression)
+![The final structure for the given expression](./img/parsed-expression.JPG "The parse tree of the given expression")
 
 Though, that seems too convoluted... This is where [Abstract Syntax Tree (AST)](https://en.wikipedia.org/wiki/Abstract_syntax_tree) comes in. It basically means a **simpler representation of the parse tree**.
 
 Let's remove all the grammar rules in the tree and we will have this elegant and easy-to-follow AST:
 
-[IMAGE](ast version of the final structure)
+![Simple version of the parse tree called AST](./img/ast-version.JPG "AST version from the convoluted parse tree")
 
 Now, we only need to traverse this tree to evaluate our expression. While we were _"consuming"_ tokens, that is the part where we create a [node](https://en.wikipedia.org/wiki/Node_(computer_science)) and append it to the tree so that we can traverse the tree afterward but I didn't make my solution this way, while we were consuming tokens, it's also already evaluating it and returning the result instead.
 
-[IMAGE](screenshot of a code snippet showing the explanation above)
+![Screenshot of a code snippet showing how I evaluate expressions](./img/already-evaluating.JPEG "Code snippet showing how my parser evaluates expressions")
 
 And that's how the recursive descent parsing algorithm I implemented work to evaluate these string expressions!
 
@@ -136,4 +136,4 @@ Obviously, we only defined three grammar rules which evaluate the four simple ma
 
 I didn't bother looking back at the articles/videos nor searching on how to implement parenthesis, factorial, exponent, and percent. I came up with the solutions on my own and here's the final grammar set for my recursive descent parser algorithm!
 
-[IMAGE](all grammar rules on the evaluator)
+![All grammar rules on ZekuCalcu's calculator](./img/zeku-calcu-grammar.JPG "ZekuCalcu's grammar rules")
