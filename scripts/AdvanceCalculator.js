@@ -119,18 +119,18 @@ export function Evaluator(lexemes) {
     if (this.advance() !== LexemeType.rightParen) return NaN;
 
     const peeked = this.peek();
-    if (peeked === LexemeType.percent) {
+    if (peeked === LexemeType.caret) {
       this.advance();
-      a = a / 100;
+      const b = this.factor();
+      a = a ** b;
     }
     else if (peeked === LexemeType.exclamation) {
       this.advance();
       a = this.gamma(a);
     }
-    else if (peeked === LexemeType.caret) {
+    else if (peeked === LexemeType.percent) {
       this.advance();
-      const b = this.factor();
-      a = a ** b;
+      a = a / 100;
     }
     return a;
   }
